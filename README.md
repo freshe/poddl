@@ -1,4 +1,9 @@
-# LibsynDL
+# LibsynDL 
+--------
 Download podcasts from Libsyn
 
-Arguments: LibsynDL http://url.to.rss /OutputPath
+https://www.fredrikblank.se/libsyndl.php
+https://github.com/freshe/LibsynDL
+
+How to use: 
+LibsynDL http://url.to.rss /OutputPath
