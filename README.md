@@ -6,4 +6,4 @@ How to use:
 
 <small><strong>$ LibsynDL http://url.to.rss /OutputPath</strong></small>
 
-https://www.fredrikblank.com/libsyndl.php
+https://www.fredrikblank.com/libsyndl/
