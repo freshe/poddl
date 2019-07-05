@@ -44,7 +44,7 @@ int main(int argc, const char *argv[]) {
         print_help();
         return 0;
     }
-    
+
     std::string const url = argv[1];
     std::string const path = argv[2];
 
@@ -60,7 +60,7 @@ int main(int argc, const char *argv[]) {
     auto rss_success = client.get_string_stream(url, rss_stream);
     
     if (rss_success) {
-        std::string const pattern = "\\<link\\>.+(http.+/(.+\\.mp3|m4a|ogg|aac)).+\\</link\\>";
+        std::string const pattern = "\\<enclosure.+url=.+(http.+/(.+\\.mp3|m4a|ogg|aac)).+/\\>";
         std::string xml = rss_stream.str();
         std::regex regex(pattern);
         std::smatch match;
@@ -91,7 +91,7 @@ int main(int argc, const char *argv[]) {
                 } else {
                     std::cout << "Error downloading file " << file_name << std::endl;
                 }
-                
+
                 count++;
             }
         } else {
