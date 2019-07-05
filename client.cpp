@@ -33,7 +33,7 @@
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Wldap32.Lib")
 #pragma comment(lib, "Crypt32.Lib")
-#pragma comment(lib, "wincurl/libcurl_a.lib")
+#pragma comment(lib, "../LibsynDl.vs/wincurl/libcurl_a.lib")
 #else
 #include <curl/curl.h>
 #endif
