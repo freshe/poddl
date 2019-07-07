@@ -28,11 +28,10 @@
 #include <sstream>
 #include <string>
 #include <list>
-#include <tuple>
-#include <regex>
 #include <errno.h>
 #include "fs.hpp"
 #include "client.hpp"
+#include "parser.hpp"
 
 void print_help() {
     std::cout << "Arguments: LibsynDL http://url.to.rss /OutputPath" << std::endl;
@@ -47,7 +46,8 @@ int main(int argc, const char *argv[]) {
 
     std::string const url = argv[1];
     std::string const path = argv[2];
-
+    std::ostringstream rss_stream;
+    
     if (!FileSystem::directory_exists(path)) {
         if (!FileSystem::create_directory(path)) {
             std::cout << "Error: Could not create directory " << path << std::endl;
@@ -55,43 +55,28 @@ int main(int argc, const char *argv[]) {
         }
     }
 
-    std::ostringstream rss_stream;
     auto client = Client();
+    auto parser = Parser();
     auto rss_success = client.get_string_stream(url, rss_stream);
     
     if (rss_success) {
-        std::string const pattern = "\\<enclosure.+url=.+(http.+/(.+\\.mp3|m4a|ogg|aac)).+/\\>";
         std::string xml = rss_stream.str();
-        std::regex regex(pattern);
-        std::smatch match;
-        std::list<std::tuple<std::string, std::string>> files;
-
-        while (std::regex_search(xml, match, regex)) {
-            std::string const file_url = match.str(1);
-            std::string const file_name = match.str(2);
-            std::tuple<std::string, std::string> file;
-            file = make_tuple(file_url, file_name);
-            files.push_back(file);
-            xml = match.suffix().str();
-        }
-        
-        auto const size = files.size();
+        auto items = parser.get_items(xml);
+        auto size = items.size();
         
         if (size > 0) {
             std::cout << "Downloading " << size << " files" << std::endl;
             int count = 1;
             
-            for (auto const& item : files) {
-                std::string const file_url = std::get<0>(item);
-                std::string const file_name = std::get<1>(item);
-                std::ofstream fs(path + "/" + file_name, std::ostream::binary);
+            for (auto const& item : items) {
+                std::ofstream fs(path + "/" + item.file_name, std::ostream::binary);
                 
-                if (client.write_file_stream(file_url, fs)) {
-                    std::cout << "Downloaded file " << count << "/" << size << " " << file_name << std::endl;
+                if (client.write_file_stream(item.url, fs)) {
+                    std::cout << "Downloaded file " << count << "/" << size << " " << item.file_name << std::endl;
                 } else {
-                    std::cout << "Error downloading file " << file_name << std::endl;
+                    std::cout << "Error downloading file " << item.file_name << std::endl;
                 }
-
+                
                 count++;
             }
         } else {
