@@ -69,12 +69,12 @@ int main(int argc, const char *argv[]) {
             int count = 1;
             
             for (auto const& item : items) {
-                std::ofstream fs(path + "/" + item.file_name, std::ostream::binary);
+                std::ofstream fs(path + "/" + item.name, std::ostream::binary);
                 
                 if (client.write_file_stream(item.url, fs)) {
-                    std::cout << "Downloaded file " << count << "/" << size << " " << item.file_name << std::endl;
+                    std::cout << "Downloaded file " << count << "/" << size << " " << item.name << std::endl;
                 } else {
-                    std::cout << "Error downloading file " << item.file_name << std::endl;
+                    std::cout << "Error downloading file " << item.name << std::endl;
                 }
                 
                 count++;

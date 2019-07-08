@@ -27,22 +27,20 @@
 
 std::string const pattern = "\\<enclosure.+url=.+(http.+/(.+\\.mp3|m4a|ogg|aac)).+/\\>";
 
-std::list<Item> Parser::get_items(std::string xml) {
+std::list<Podcast> Parser::get_items(std::string xml) {
     std::regex regex(pattern);
     std::smatch match;
-    std::list<Item> items;
+    std::list<Podcast> podcasts;
     
     while (std::regex_search(xml, match, regex)) {
         std::string const file_url = match.str(1);
         std::string const file_name = match.str(2);
-        
-        auto item = Item();
-        item.file_name = file_name;
+        auto item = Podcast();
+        item.name = file_name;
         item.url = file_url;
-        items.push_back(item);
-        
+        podcasts.push_back(item);
         xml = match.suffix().str();
     }
     
-    return items;
+    return podcasts;
 }

@@ -26,7 +26,6 @@
 #include "client.hpp"
 
 #ifdef _WIN32
-#define CURL_STATICLIB
 #include "../LibsynDl.vs/wincurl/curl.h"
 #pragma comment(lib, "Normaliz.lib")
 #pragma comment(lib, "Advapi32.lib")

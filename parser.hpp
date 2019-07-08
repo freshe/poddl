@@ -25,12 +25,12 @@
 #include <string>
 #include <list>
 
-struct Item {
+struct Podcast {
     std::string url;
-    std::string file_name;
+    std::string name;
 };
 
 class Parser { 
 public:
-    std::list<Item> get_items(std::string xml);
+    std::list<Podcast> get_items(std::string xml);
 };
