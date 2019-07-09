@@ -1,5 +1,5 @@
-#LibsynDL
-##<em>Libsyn downloader</em>
+# LibsynDL
+## <em>Libsyn downloader</em>
 
 <strong>Download all podcasts from Libsyn</strong>
 
