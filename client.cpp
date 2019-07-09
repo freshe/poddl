@@ -37,6 +37,14 @@
 #include <curl/curl.h>
 #endif
 
+Client::Client() {
+    curl_global_init(CURL_GLOBAL_ALL);
+}
+
+Client::~Client() {
+    curl_global_cleanup();
+}
+
 size_t Client::curl_write(void* buf, size_t size, size_t nmemb, void* up) {
     if (up) {
         std::ostream& os = *static_cast<std::ostream*>(up);
@@ -48,7 +56,7 @@ size_t Client::curl_write(void* buf, size_t size, size_t nmemb, void* up) {
     }
     
     return 0;
-};
+}
 
 CURLcode Client::curl_read(const std::string& url, std::ostream& os, long timeout) {
     CURLcode code(CURLE_FAILED_INIT);
@@ -67,14 +75,6 @@ CURLcode Client::curl_read(const std::string& url, std::ostream& os, long timeou
     }
     
     return code;
-};
-
-Client::Client() {
-    curl_global_init(CURL_GLOBAL_ALL);
-}
-
-Client::~Client() {
-    curl_global_cleanup();
 }
 
 bool Client::get_string_stream(std::string url, std::ostringstream &stream) {
@@ -83,7 +83,7 @@ bool Client::get_string_stream(std::string url, std::ostringstream &stream) {
     }
     
     return false;
-};
+}
 
 bool Client::write_file_stream(std::string url, std::ofstream &stream) {
     if (CURLE_OK == Client::curl_read(url, stream, 30)) {
@@ -91,4 +91,4 @@ bool Client::write_file_stream(std::string url, std::ofstream &stream) {
     }
     
     return false;
-};
+}

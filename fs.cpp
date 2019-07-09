@@ -48,7 +48,7 @@ bool FileSystem::directory_exists(std::string path) {
 	}
 	return false;
 #endif
-};
+}
 
 bool FileSystem::create_directory(std::string path) {
 #ifndef _WIN32
@@ -63,4 +63,4 @@ bool FileSystem::create_directory(std::string path) {
     }
     return true;
 #endif
-};
+}
