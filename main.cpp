@@ -43,7 +43,7 @@ int main(int argc, const char *argv[]) {
         print_help();
         return 0;
     }
-
+    
     std::string const url = argv[1];
     std::string const path = argv[2];
     std::ostringstream rss_stream;
@@ -69,12 +69,12 @@ int main(int argc, const char *argv[]) {
             int count = 1;
             
             for (auto const& item : items) {
-                std::ofstream fs(path + "/" + item.name, std::ostream::binary);
-                
+                std::ofstream fs(path + "/" + item.title + "." + item.ext, std::ostream::binary);
+
                 if (client.write_file_stream(item.url, fs)) {
-                    std::cout << "Downloaded file " << count << "/" << size << " " << item.name << std::endl;
+                    std::cout << "Downloaded file " << count << "/" << size << " " << item.title << std::endl;
                 } else {
-                    std::cout << "Error downloading file " << item.name << std::endl;
+                    std::cout << "Error downloading file " << item.title << std::endl;
                 }
                 
                 count++;

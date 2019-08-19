@@ -25,22 +25,52 @@
 #include "parser.hpp"
 #include <regex>
 
-std::string const pattern = "\\<enclosure.+url=.+(http.+/(.+\\.mp3|m4a|ogg|aac)).+/\\>";
+std::string const enclosure_pattern = "<enclosure.+url=.+(http.+/(.+\\.(mp3|m4a|ogg|aac))).+/\\>";
+std::string const title_pattern = "<title>(.+)</title>";
+std::string const start_tag = "<item>";
+std::string const end_tag = "</item>";
+std::size_t const end_len = end_tag.length();
 
 std::list<Podcast> Parser::get_items(std::string xml) {
-    std::regex regex(pattern);
-    std::smatch match;
     std::list<Podcast> podcasts;
+    auto spos = xml.find(start_tag);
+    auto epos = xml.find(end_tag);
     
-    while (std::regex_search(xml, match, regex)) {
-        std::string const file_url = match.str(1);
-        std::string const file_name = match.str(2);
-        auto item = Podcast();
-        item.name = file_name;
-        item.url = file_url;
-        podcasts.push_back(item);
-        xml = match.suffix().str();
+    while (spos >= 0 && epos > spos) {
+        auto len = (epos - spos) + end_len;
+        auto item = xml.substr(spos, len);
+
+        std::string url, name, title, ext;
+        std::regex rgxEnclosure(enclosure_pattern);
+        std::regex rgxTitle(title_pattern);
+        std::smatch matchEnclosure;
+        std::smatch matchTitle;
+        
+        //URL, Name, Extension
+        if (std::regex_search(item, matchEnclosure, rgxEnclosure)) {
+            url = matchEnclosure.str(1);
+            name = matchEnclosure.str(2);
+            ext = matchEnclosure.str(3);
+        }
+        
+        //Title
+        if (std::regex_search(item, matchTitle, rgxTitle)) {
+            title = matchTitle.str(1);
+        }
+        
+        if (!url.empty() && !name.empty() && !ext.empty() && !title.empty()) {
+            auto podcast = Podcast();
+            podcast.url = url;
+            podcast.name = name;
+            podcast.title = title;
+            podcast.ext = ext;
+            podcasts.push_back(podcast);
+        }
+        
+        xml = xml.replace(spos, len, "");
+        spos = xml.find(start_tag);
+        epos = xml.find(end_tag);
     }
-    
+
     return podcasts;
 }

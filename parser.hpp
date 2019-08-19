@@ -28,6 +28,8 @@
 struct Podcast {
     std::string url;
     std::string name;
+    std::string title;
+    std::string ext;
 };
 
 class Parser { 
