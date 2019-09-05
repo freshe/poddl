@@ -34,12 +34,29 @@
 #include "parser.hpp"
 
 void print_help() {
-    std::cout << "Arguments: LibsynDL http://url.to.rss /OutputPath" << std::endl;
+    std::cout << "How to use:" << std::endl;
+    
+#ifdef _WIN32
+    std::cout << "LibsynDL.exe http://url.to.rss /OutputPath" << std::endl;
+#else
+    std::cout << "./LibsynDL http://url.to.rss /OutputPath" << std::endl;
+#endif
+}
+
+void print_header() {
+    std::cout << "LibsynDL" << std::endl;
+    std::cout << "https://www.fredrikblank.com/libsyndl/" << std::endl;
+    std::cout << std::endl;
 }
 
 int main(int argc, const char *argv[]) {
+	print_header();
+
     if (argc != 3) {
-        std::cout << "Error: Invalid input" << std::endl;
+        std::cout << "Error: Invalid input";
+        std::cout << std::endl;
+        std::cout << std::endl;
+
         print_help();
         return 0;
     }
@@ -85,6 +102,6 @@ int main(int argc, const char *argv[]) {
     } else {
         std::cout << "Error: Could not fetch URL" << std::endl;
     }
-    
+
     return 0;
 }
