@@ -33,34 +33,34 @@
 #endif
 
 bool FileSystem::directory_exists(std::string path) {
-#ifndef _WIN32
+#ifdef _WIN32
+    DWORD file_attributes = GetFileAttributesA(path.c_str());
+    if (file_attributes != INVALID_FILE_ATTRIBUTES) {
+        if ( (file_attributes & FILE_ATTRIBUTE_DIRECTORY) > 0) {
+            return true;
+        }
+    }
+return false;
+#else
     struct stat st;
     if (stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode)) {
         return true;
     }
     return false;
-#else
-	DWORD file_attributes = GetFileAttributesA(path.c_str());
-	if (file_attributes != INVALID_FILE_ATTRIBUTES) {
-		if ( (file_attributes & FILE_ATTRIBUTE_DIRECTORY) > 0) {
-			return true;
-		}
-	}
-	return false;
 #endif
 }
 
 bool FileSystem::create_directory(std::string path) {
-#ifndef _WIN32
+#ifdef _WIN32
+    if (!CreateDirectoryA(path.c_str(), NULL)) {
+        return false;
+    }
+    return true;
+#else
     mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     if (directory_exists(path.c_str())) {
         return true;
     }
     return false;
-#else
-	if (!CreateDirectoryA(path.c_str(), NULL)) {
-        return false;
-    }
-    return true;
 #endif
 }
