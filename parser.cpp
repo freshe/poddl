@@ -25,7 +25,7 @@
 #include "parser.hpp"
 #include <regex>
 
-std::string const enclosure_pattern = "<enclosure.+url=.+(http.+/(.+\\.(mp3|m4a|ogg|aac))).+/\\>";
+std::string const enclosure_pattern = "<enclosure.+url=.+(http.+/(.+\\.(mp3|m4a|mp4|ogg|oga|aac|flac))).+/\\>";
 std::string const title_pattern = "<title>(.+)</title>";
 std::string const start_tag = "<item>";
 std::string const end_tag = "</item>";

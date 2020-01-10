@@ -40,7 +40,7 @@ bool FileSystem::directory_exists(std::string path) {
             return true;
         }
     }
-return false;
+    return false;
 #else
     struct stat st;
     if (stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode)) {
