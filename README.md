@@ -1,7 +1,7 @@
 # LibsynDL
-## <em>Libsyn / Podcast downloader</em>
+## _Libsyn / Podcast downloader_
 
-<strong>Download all podcasts from Libsyn</strong>
+*Download all podcasts from Libsyn*
 
 LibsynDL is a small cross platform command line tool for downloading all podcast episodes from a Libsyn RSS feed.
 
@@ -9,4 +9,4 @@ LibsynDL is a small cross platform command line tool for downloading all podcast
 
 How to use:
 
-<small><strong>$ LibsynDL http://url.to.rss /OutputPath</strong></small>
+> $ LibsynDL http://url.to.rss /OutputPath```
