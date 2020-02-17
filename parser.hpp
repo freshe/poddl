@@ -24,6 +24,7 @@
 
 #include <string>
 #include <list>
+#include <map>
 
 struct Podcast {
     std::string url;
@@ -32,7 +33,8 @@ struct Podcast {
     std::string ext;
 };
 
-class Parser { 
+class Parser {
 public:
     std::list<Podcast> get_items(std::string xml);
+    std::string decode_html(std::string input);
 };
