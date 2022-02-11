@@ -37,7 +37,6 @@ class Client {
 private:
     static size_t curl_write(void* buf, size_t size, size_t nmemb, void* up);
     static CURLcode curl_read(const std::string& url, std::ostream& os, long timeout);
-
 public:
     Client();
     ~Client();

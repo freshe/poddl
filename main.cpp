@@ -58,6 +58,7 @@ int main(int argc, const char *argv[]) {
         std::cout << std::endl;
 
         print_help();
+
         return 0;
     }
     
@@ -76,31 +77,35 @@ int main(int argc, const char *argv[]) {
     auto parser = Parser();
     auto rss_success = client.get_string_stream(url, rss_stream);
     
-    if (rss_success) {
-        std::string xml = rss_stream.str();
-        auto items = parser.get_items(xml);
-        auto size = items.size();
-        
-        if (size > 0) {
-            std::cout << "Downloading " << size << " files" << std::endl;
-            int count = 1;
-            
-            for (auto const& item : items) {
-                std::ofstream fs(path + "/" + item.title + "." + item.ext, std::ostream::binary);
-
-                if (client.write_file_stream(item.url, fs)) {
-                    std::cout << "Downloaded file " << count << "/" << size << " " << item.title << std::endl;
-                } else {
-                    std::cout << "Error downloading file " << item.title << std::endl;
-                }
-                
-                count++;
-            }
-        } else {
-            std::cout << "Error: No files found" << std::endl;
-        }
-    } else {
+    if (!rss_success) {
         std::cout << "Error: Could not fetch URL" << std::endl;
+        return 0;
+    }
+
+    std::string xml = rss_stream.str();
+    auto items = parser.get_items(xml);
+    auto size = items.size();
+    auto success = size > 0;
+
+    if (!success) {
+        std::cout << "Error: No files found" << std::endl;
+        return 0;
+    }
+        
+    /* Everything seems ok? */
+    std::cout << "Downloading " << size << " files" << std::endl;
+    int count = 1;
+            
+    for (auto const& item : items) {
+        std::ofstream fs(path + "/" + item.title + "." + item.ext, std::ostream::binary);
+
+        if (client.write_file_stream(item.url, fs)) {
+            std::cout << "Downloaded file " << count << "/" << size << " " << item.title << std::endl;
+        } else {
+            std::cout << "Error downloading file " << item.title << std::endl;
+        }
+
+        count++;
     }
 
     return 0;
