@@ -24,6 +24,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <cstring>
 #include "fs.hpp"
 #ifdef _WIN32
 #include <windows.h>
