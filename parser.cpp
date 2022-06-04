@@ -35,6 +35,10 @@ std::size_t const end_len = end_tag.length();
 
 std::map<std::string, std::string> html_entities
 {
+	{":", ""},
+	{"\\", ""},
+	{"/", ""},
+	
     {"&#32;", " "},
     {"&#33;", "!"},
     {"&#34;", ""},

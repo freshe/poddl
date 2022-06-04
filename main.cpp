@@ -134,5 +134,9 @@ int main(int argc, const char *argv[]) {
         count++;
     }
 
+    if (FileSystem::directory_is_empty(tempPath)) {
+        FileSystem::delete_directory(tempPath);
+    }
+
     return 0;
 }

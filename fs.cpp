@@ -23,13 +23,17 @@
  */
 
 #include <stdio.h>
+#include <iostream>
 #include "fs.hpp"
-
 #ifdef _WIN32
 #include <windows.h>
+#include <shlwapi.h>
 #include <direct.h>
+#pragma comment(lib, "Shlwapi.lib")
 #else
 #include <sys/stat.h>
+#include <unistd.h>
+#include <dirent.h>
 #endif
 
 bool FileSystem::directory_exists(std::string path) {
@@ -65,6 +69,16 @@ bool FileSystem::create_directory(std::string path) {
 #endif
 }
 
+bool FileSystem::delete_directory(std::string path) {
+#ifdef _WIN32
+    auto status = RemoveDirectoryA(path.c_str());
+    return status != 0;
+#else
+    auto status = rmdir(path.c_str());
+    return status == 0;
+#endif
+}
+
 bool FileSystem::file_exists(std::string path) {
 #ifdef _WIN32
     DWORD file_attributes = GetFileAttributes(path.c_str());
@@ -86,5 +100,38 @@ bool FileSystem::move_file(std::string from, std::string to) {
         return false;
     }
     return true;
+#endif
+}
+
+bool FileSystem::directory_is_empty(std::string path) {
+    bool exists = directory_exists(path);
+    if (!exists) {
+        return false;
+    }
+#ifdef _WIN32
+    return PathIsDirectoryEmptyA(path.c_str());
+#else
+    int c = 0;
+    dirent* d;
+    DIR* dir = opendir(path.c_str());
+
+    if (dir == NULL) {
+        return false;
+    }
+
+    while((d = readdir(dir)) != NULL) {
+        if (c > 0) {
+            break;
+        }
+
+        if (strcmp(d->d_name, ".") == 0 || strcmp(d->d_name, "..") == 0) {
+            continue;
+        }
+
+        c++;
+    }
+
+    closedir(dir);
+    return c == 0;
 #endif
 }
