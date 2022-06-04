@@ -40,67 +40,44 @@
 bool FileSystem::directory_exists(std::string path) {
 #ifdef _WIN32
     DWORD file_attributes = GetFileAttributesA(path.c_str());
-    if (file_attributes != INVALID_FILE_ATTRIBUTES) {
-        if ( (file_attributes & FILE_ATTRIBUTE_DIRECTORY) > 0) {
-            return true;
-        }
-    }
-    return false;
+    return file_attributes != INVALID_FILE_ATTRIBUTES && (file_attributes & FILE_ATTRIBUTE_DIRECTORY) > 0;
 #else
     struct stat st;
-    if (stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode)) {
-        return true;
-    }
-    return false;
+    return stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode);
 #endif
 }
 
 bool FileSystem::create_directory(std::string path) {
 #ifdef _WIN32
-    if (!CreateDirectoryA(path.c_str(), NULL)) {
-        return false;
-    }
-    return true;
+    return CreateDirectoryA(path.c_str(), NULL) != 0;
 #else
-    mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    if (directory_exists(path.c_str())) {
-        return true;
-    }
-    return false;
+    return mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0;
 #endif
 }
 
 bool FileSystem::delete_directory(std::string path) {
 #ifdef _WIN32
-    auto status = RemoveDirectoryA(path.c_str());
-    return status != 0;
+    return RemoveDirectoryA(path.c_str()) != 0;
 #else
-    auto status = rmdir(path.c_str());
-    return status == 0;
+    return rmdir(path.c_str()) == 0;
 #endif
 }
 
 bool FileSystem::file_exists(std::string path) {
 #ifdef _WIN32
-    DWORD file_attributes = GetFileAttributes(path.c_str());
-    return (file_attributes != INVALID_FILE_ATTRIBUTES && !(file_attributes & FILE_ATTRIBUTE_DIRECTORY));
+    DWORD file_attributes = GetFileAttributesA(path.c_str());
+    return file_attributes != INVALID_FILE_ATTRIBUTES && !(file_attributes & FILE_ATTRIBUTE_DIRECTORY);
 #else
     struct stat st;
-    return (stat (path.c_str(), &st) == 0);
+    return stat(path.c_str(), &st) == 0;
 #endif
 }
 
 bool FileSystem::move_file(std::string from, std::string to) {
 #ifdef _WIN32
-    if (MoveFileEx(from.c_str(), to.c_str(), MOVEFILE_REPLACE_EXISTING) == 0) {
-        return false;
-    }
-    return true;
+    return MoveFileEx(from.c_str(), to.c_str(), MOVEFILE_REPLACE_EXISTING) != 0;
 #else
-    if (rename(from.c_str(), to.c_str())) {
-        return false;
-    }
-    return true;
+    return rename(from.c_str(), to.c_str()) == 0;
 #endif
 }
 
