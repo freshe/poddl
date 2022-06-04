@@ -55,7 +55,6 @@ bool create_directory_if_not_exists(std::string path) {
             return false;
         }
     }
-
     return true;
 }
 
@@ -122,10 +121,9 @@ int main(int argc, const char *argv[]) {
 
         if (client.write_file_stream(item.url, fs)) {
             fs.close();
-
             std::cout << "Downloaded file " << count << "/" << size << " " << item.title << std::endl;
+
             if (!FileSystem::move_file(tempFilePath, filePath)) {
-                //std::cout << GetLastError() << std::endl;
                 std::cout << "Error moving temp file. I'm out. " << filePath << std::endl;
                 return -1;
             }
@@ -138,21 +136,3 @@ int main(int argc, const char *argv[]) {
 
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
