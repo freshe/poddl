@@ -49,6 +49,16 @@ void print_header() {
     std::cout << std::endl;
 }
 
+bool create_directory_if_not_exists(std::string path) {
+    if (!FileSystem::directory_exists(path)) {
+        if (!FileSystem::create_directory(path)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 int main(int argc, const char *argv[]) {
 	print_header();
 
@@ -59,18 +69,22 @@ int main(int argc, const char *argv[]) {
 
         print_help();
 
-        return 0;
+        return -1;
     }
     
     std::string const url = argv[1];
     std::string const path = argv[2];
+    std::string const tempPath = path + "/tmp";
     std::ostringstream rss_stream;
     
-    if (!FileSystem::directory_exists(path)) {
-        if (!FileSystem::create_directory(path)) {
-            std::cout << "Error: Could not create directory " << path << std::endl;
-            return 0;
-        }
+    if (!create_directory_if_not_exists(path)) {
+        std::cout << "Error: Could not create directory " << path << std::endl;
+        return -1;
+    }
+
+    if (!create_directory_if_not_exists(tempPath)) {
+        std::cout << "Error: Could not create temp directory " << path << std::endl;
+        return -1;
     }
 
     auto client = Client();
@@ -79,7 +93,7 @@ int main(int argc, const char *argv[]) {
     
     if (!rss_success) {
         std::cout << "Error: Could not fetch URL" << std::endl;
-        return 0;
+        return -1;
     }
 
     std::string xml = rss_stream.str();
@@ -89,18 +103,32 @@ int main(int argc, const char *argv[]) {
 
     if (!success) {
         std::cout << "Error: No files found" << std::endl;
-        return 0;
+        return -1;
     }
         
-    /* Everything seems ok? */
     std::cout << "Downloading " << size << " files" << std::endl;
     int count = 1;
             
     for (auto const& item : items) {
-        std::ofstream fs(path + "/" + item.title + "." + item.ext, std::ostream::binary);
+        std::string const filePath = path + "/" + item.title + "." + item.ext;
+        std::string const tempFilePath = tempPath + "/" + item.title + "." + item.ext;
+
+        if (FileSystem::file_exists(filePath)) {
+            std::cout << "Skipping file " << filePath << std::endl;
+            continue;
+        }
+
+        std::ofstream fs(tempFilePath, std::ostream::binary);
 
         if (client.write_file_stream(item.url, fs)) {
+            fs.close();
+
             std::cout << "Downloaded file " << count << "/" << size << " " << item.title << std::endl;
+            if (!FileSystem::move_file(tempFilePath, filePath)) {
+                //std::cout << GetLastError() << std::endl;
+                std::cout << "Error moving temp file. I'm out. " << filePath << std::endl;
+                return -1;
+            }
         } else {
             std::cout << "Error downloading file " << item.title << std::endl;
         }
@@ -110,3 +138,21 @@ int main(int argc, const char *argv[]) {
 
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
