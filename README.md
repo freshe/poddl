@@ -1,10 +1,10 @@
-# LibsynDL
-## _Libsyn / Podcast downloader_
+# poddl
+## _Podcast downloader_
 
-*Download all podcasts from Libsyn*
+*Download all podcasts from an RSS-feed*
 
 Website:
-https://www.fredrikblank.com/libsyndl/
+https://www.fredrikblank.com/poddl/
 
 Podcast Archiver (for Mac)
 https://www.fredrikblank.com/podcast-archiver/
@@ -12,10 +12,10 @@ https://www.fredrikblank.com/podcast-archiver/
 Podcast Saver (for iOS)
 https://www.fredrikblank.com/podcast-saver/
 
-LibsynDL is a small cross platform command line tool for downloading all podcast episodes from a Libsyn RSS feed.
+poddl is a small cross platform command line tool for downloading all podcast episodes from an RSS feed.
 
 --
 
 How to use:
 
-> $ LibsynDL http://url.to.rss /OutputPath```
+> $ ./poddl http://url.to.rss /OutputPath```

@@ -33,19 +33,22 @@
 #include "client.hpp"
 #include "parser.hpp"
 
+#define VERSION "2022.06.05"
+
 void print_help() {
     std::cout << "How to use:" << std::endl;
     
 #ifdef _WIN32
-    std::cout << "LibsynDL.exe http://url.to.rss /OutputPath" << std::endl;
+    std::cout << "poddl.exe http://url.to.rss /OutputPath" << std::endl;
 #else
-    std::cout << "./LibsynDL http://url.to.rss /OutputPath" << std::endl;
+    std::cout << "./poddl http://url.to.rss /OutputPath" << std::endl;
 #endif
+    std::cout << std::endl;
 }
 
 void print_header() {
-    std::cout << "LibsynDL" << std::endl;
-    std::cout << "https://www.fredrikblank.com/libsyndl/" << std::endl;
+    std::cout << std::endl << "poddl " << VERSION << std::endl;
+    std::cout << "https://www.fredrikblank.com/poddl/" << std::endl;
     std::cout << std::endl;
 }
 
@@ -61,13 +64,16 @@ bool create_directory_if_not_exists(std::string path) {
 int main(int argc, const char *argv[]) {
 	print_header();
 
+    if (argc == 1) {
+        print_help();
+        return -1;
+    }
+
     if (argc != 3) {
         std::cout << "Error: Invalid input";
         std::cout << std::endl;
         std::cout << std::endl;
-
         print_help();
-
         return -1;
     }
     
