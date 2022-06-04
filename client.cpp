@@ -58,7 +58,7 @@ size_t Client::curl_write(void* buf, size_t size, size_t nmemb, void* up) {
     return 0;
 }
 
-CURLcode Client::curl_read(const std::string& url, std::ostream& os, long timeout) {
+CURLcode Client::curl_read(const std::string& url, std::ostream& os /*, long timeout*/) {
     CURLcode code(CURLE_FAILED_INIT);
     CURL* curl = curl_easy_init();
     
@@ -68,8 +68,10 @@ CURLcode Client::curl_read(const std::string& url, std::ostream& os, long timeou
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_FILE, &os);
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+        //curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+        //curl_easy_setopt(curl, CURLOPT_TIMEOUT, 60);
         //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        
         code = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
     }
@@ -78,7 +80,7 @@ CURLcode Client::curl_read(const std::string& url, std::ostream& os, long timeou
 }
 
 bool Client::get_string_stream(std::string url, std::ostringstream &stream) {
-    if (CURLE_OK == Client::curl_read(url, stream, 60)) {
+    if (CURLE_OK == Client::curl_read(url, stream)) {
         return true;
     }
     
@@ -86,7 +88,7 @@ bool Client::get_string_stream(std::string url, std::ostringstream &stream) {
 }
 
 bool Client::write_file_stream(std::string url, std::ofstream &stream) {
-    if (CURLE_OK == Client::curl_read(url, stream, 30)) {
+    if (CURLE_OK == Client::curl_read(url, stream)) {
         return true;
     }
     

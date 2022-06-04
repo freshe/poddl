@@ -434,4 +434,3 @@ std::string Parser::decode_html(std::string input) {
     
     return input;
 }
-
