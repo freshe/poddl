@@ -97,7 +97,7 @@ bool FileSystem::directory_is_empty(std::string path) {
         return false;
     }
 
-    while((d = readdir(dir)) != NULL) {
+    while ((d = readdir(dir)) != NULL) {
         if (c > 0) {
             break;
         }

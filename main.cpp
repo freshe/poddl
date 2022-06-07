@@ -88,7 +88,7 @@ int main(int argc, const char *argv[]) {
     }
 
     if (!create_directory_if_not_exists(tempPath)) {
-        std::cout << "Error: Could not create temp directory " << path << std::endl;
+        std::cout << "Error: Could not create temp directory " << tempPath << std::endl;
         return -1;
     }
 
