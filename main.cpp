@@ -29,11 +29,12 @@
 #include <string>
 #include <list>
 #include <errno.h>
+#include "helpers.hpp"
 #include "fs.hpp"
 #include "client.hpp"
 #include "parser.hpp"
 
-#define VERSION "2022.06.05"
+#define VERSION "2022.07.06"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -52,17 +53,8 @@ void print_header() {
     std::cout << std::endl;
 }
 
-bool create_directory_if_not_exists(std::string path) {
-    if (!FileSystem::directory_exists(path)) {
-        if (!FileSystem::create_directory(path)) {
-            return false;
-        }
-    }
-    return true;
-}
-
 int main(int argc, const char *argv[]) {
-	print_header();
+    print_header();
 
     if (argc == 1) {
         print_help();
@@ -77,17 +69,17 @@ int main(int argc, const char *argv[]) {
         return -1;
     }
     
-    std::string const url = argv[1];
     std::string const path = argv[2];
     std::string const tempPath = path + "/tmp";
+    std::string const url = Helpers::url_encode_lazy(argv[1]);
     std::ostringstream rss_stream;
-    
-    if (!create_directory_if_not_exists(path)) {
+
+    if (!FileSystem::create_directory_if_not_exists(path)) {
         std::cout << "Error: Could not create directory " << path << std::endl;
         return -1;
     }
 
-    if (!create_directory_if_not_exists(tempPath)) {
+    if (!FileSystem::create_directory_if_not_exists(tempPath)) {
         std::cout << "Error: Could not create temp directory " << tempPath << std::endl;
         return -1;
     }
@@ -96,12 +88,14 @@ int main(int argc, const char *argv[]) {
     auto parser = Parser();
     auto rss_success = client.get_string_stream(url, rss_stream);
     
+    std::cout << "Fetching URL: " << url << std::endl;
+
     if (!rss_success) {
         std::cout << "Error: Could not fetch URL" << std::endl;
         return -1;
     }
 
-    std::string xml = rss_stream.str();
+    auto xml = rss_stream.str();
     auto items = parser.get_items(xml);
     auto size = items.size();
     auto success = size > 0;

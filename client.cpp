@@ -70,7 +70,6 @@ CURLcode Client::curl_read(const std::string& url, std::ostream& os) {
         curl_easy_setopt(curl, CURLOPT_FILE, &os);
         //curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
         //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-        
         code = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
     }

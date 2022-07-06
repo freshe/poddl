@@ -14,3 +14,6 @@ https://www.fredrikblank.com/podcast-saver/
 
 How to use:  
 > $ ./poddl http://url.to.rss /OutputPath
+
+How to build:
+> $ g++ *.cpp -O2 -std=c++11 -lcurl -o poddl

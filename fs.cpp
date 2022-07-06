@@ -113,3 +113,12 @@ bool FileSystem::directory_is_empty(std::string path) {
     return c == 0;
 #endif
 }
+
+bool FileSystem::create_directory_if_not_exists(std::string path) {
+    if (!directory_exists(path)) {
+        if (!create_directory(path)) {
+            return false;
+        }
+    }
+    return true;
+}

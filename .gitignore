@@ -2,3 +2,4 @@
 *.obj
 *.plist
 *.entitlements
+.vscode/

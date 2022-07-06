@@ -24,11 +24,9 @@
 
 #include <string>
 #include <list>
-#include <map>
 
 struct Podcast {
     std::string url;
-    std::string name;
     std::string title;
     std::string ext;
 };
@@ -36,5 +34,4 @@ struct Podcast {
 class Parser {
 public:
     std::list<Podcast> get_items(std::string xml);
-    std::string decode_html(std::string input);
 };
