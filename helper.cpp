@@ -1,11 +1,14 @@
-#include "helpers.hpp"
+#include "helper.hpp"
+
+std::map<std::string, std::string> bad_filename_characters
+{
+    {":", ""},
+    {"/", ""},
+    {"\\", ""}
+};
 
 std::map<std::string, std::string> html_entities
 {
-    {":", ""},
-    {"\\", ""},
-    {"/", ""},
-    
     {"&#32;", " "},
     {"&#33;", "!"},
     {"&#34;", ""},
@@ -348,7 +351,7 @@ const std::string media_extensions[] =
     "mp3","m4a","mp4","ogg","oga","aac","flac","wma","wmv","mpg","mpeg","avi","m4v","mov","ac3","pcm","wav","alac" 
 };
 
-void Helpers::replace_substring(std::string& subject, const std::string& search, const std::string& replace) {
+void Helper::replace_substring(std::string& subject, const std::string& search, const std::string& replace) {
     size_t pos = 0;
     while ((pos = subject.find(search, pos)) != std::string::npos) {
          subject.replace(pos, search.length(), replace);
@@ -356,23 +359,34 @@ void Helpers::replace_substring(std::string& subject, const std::string& search,
     }
 }
 
-std::string Helpers::html_decode(std::string input) {
+std::string Helper::html_decode(std::string input) {
     for (auto const &x : html_entities) {
         std::size_t found = input.find(x.first);
         if (found != std::string::npos) {
-            Helpers::replace_substring(input, x.first, x.second);
+            Helper::replace_substring(input, x.first, x.second);
         }
     }
     
     return input;
 }
 
-std::string Helpers::url_encode_lazy(std::string input) {
-    Helpers::replace_substring(input, " ", "%20");
+std::string Helper::clean_filename(std::string input) {
+    for (auto const &x : bad_filename_characters) {
+        std::size_t found = input.find(x.first);
+        if (found != std::string::npos) {
+            Helper::replace_substring(input, x.first, x.second);
+        }
+    }
+    
     return input;
 }
 
-std::string Helpers::get_extension(std::string input) {
+std::string Helper::url_encode_lazy(std::string input) {
+    Helper::replace_substring(input, " ", "%20");
+    return input;
+}
+
+std::string Helper::get_extension(std::string input) {
     for (auto const &x : media_extensions) {
         const std::string needle = "." + x;
         auto found = input.find(needle) != std::string::npos;

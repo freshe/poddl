@@ -29,12 +29,12 @@
 #include <string>
 #include <list>
 #include <errno.h>
-#include "helpers.hpp"
+#include "helper.hpp"
 #include "fs.hpp"
 #include "client.hpp"
 #include "parser.hpp"
 
-#define VERSION "2022.07.06"
+#define VERSION "2022.07.07"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -71,7 +71,7 @@ int main(int argc, const char *argv[]) {
     
     std::string const path = argv[2];
     std::string const tempPath = path + "/tmp";
-    std::string const url = Helpers::url_encode_lazy(argv[1]);
+    std::string const url = Helper::url_encode_lazy(argv[1]);
     std::ostringstream rss_stream;
 
     if (!FileSystem::create_directory_if_not_exists(path)) {
@@ -86,12 +86,12 @@ int main(int argc, const char *argv[]) {
 
     auto client = Client();
     auto parser = Parser();
+
+    std::cout << "Fetching URL: " << url << std::endl;
     auto rss_success = client.get_string_stream(url, rss_stream);
     
-    std::cout << "Fetching URL: " << url << std::endl;
-
     if (!rss_success) {
-        std::cout << "Error: Could not fetch URL" << std::endl;
+        std::cout << "Error: Invalid response from URL" << std::endl;
         return -1;
     }
 

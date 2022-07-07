@@ -23,7 +23,7 @@
  */
 
 #include "parser.hpp"
-#include "helpers.hpp"
+#include "helper.hpp"
 #include <regex>
 #include <map>
 #include <algorithm>
@@ -36,12 +36,12 @@ std::size_t const end_len = end_tag.length();
 
 std::list<Podcast> Parser::get_items(std::string xml) {
     std::list<Podcast> podcasts;
-    auto spos = xml.find(start_tag);
-    auto epos = xml.find(end_tag);
+    auto start_pos = xml.find(start_tag);
+    auto end_pos = xml.find(end_tag);
     
-    while (spos >= 0 && epos > spos) {
-        auto len = (epos - spos) + end_len;
-        auto item = xml.substr(spos, len);
+    while (start_pos >= 0 && end_pos > start_pos) {
+        auto length = (end_pos - start_pos) + end_len;
+        auto item = xml.substr(start_pos, length);
 
         std::string url, title, ext;
         std::regex rgxEnclosure(enclosure_pattern);
@@ -61,15 +61,15 @@ std::list<Podcast> Parser::get_items(std::string xml) {
         
         if (!url.empty() && !title.empty()) {
             auto podcast = Podcast();
-            podcast.url = Helpers::url_encode_lazy(url);
-            podcast.title = Helpers::html_decode(title);
-            podcast.ext = Helpers::get_extension(url);
+            podcast.url = Helper::url_encode_lazy(url);
+            podcast.title = Helper::clean_filename(Helper::html_decode(title));
+            podcast.ext = Helper::get_extension(url);
             podcasts.push_back(podcast);
         }
-        
-        xml = xml.replace(spos, len, "");
-        spos = xml.find(start_tag);
-        epos = xml.find(end_tag);
+
+        xml = xml.replace(start_pos, length, "");
+        start_pos = xml.find(start_tag);
+        end_pos = xml.find(end_tag);
     }
 
     return podcasts;
