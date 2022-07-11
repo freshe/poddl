@@ -3,7 +3,6 @@
 
 class Helper {
 public:
-    static void replace_substring(std::string& subject, const std::string& search, const std::string& replace); 
     static std::string html_decode(std::string input);
     static std::string clean_filename(std::string input);
     static std::string url_encode_lazy(std::string input);

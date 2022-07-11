@@ -1,13 +1,13 @@
 #include "helper.hpp"
 
-std::map<std::string, std::string> bad_filename_characters
+const std::map<std::string, std::string> bad_filename_characters
 {
     {":", ""},
     {"/", ""},
     {"\\", ""}
 };
 
-std::map<std::string, std::string> html_entities
+const std::map<std::string, std::string> html_entities
 {
     {"&#32;", " "},
     {"&#33;", "!"},
@@ -351,7 +351,7 @@ const std::string media_extensions[] =
     "mp3","m4a","mp4","ogg","oga","aac","flac","wma","wmv","mpg","mpeg","avi","m4v","mov","ac3","pcm","wav","alac" 
 };
 
-void Helper::replace_substring(std::string& subject, const std::string& search, const std::string& replace) {
+void replace_substring(std::string& subject, const std::string& search, const std::string& replace) {
     size_t pos = 0;
     while ((pos = subject.find(search, pos)) != std::string::npos) {
          subject.replace(pos, search.length(), replace);
@@ -363,7 +363,7 @@ std::string Helper::html_decode(std::string input) {
     for (auto const &x : html_entities) {
         std::size_t found = input.find(x.first);
         if (found != std::string::npos) {
-            Helper::replace_substring(input, x.first, x.second);
+            replace_substring(input, x.first, x.second);
         }
     }
     
@@ -374,7 +374,7 @@ std::string Helper::clean_filename(std::string input) {
     for (auto const &x : bad_filename_characters) {
         std::size_t found = input.find(x.first);
         if (found != std::string::npos) {
-            Helper::replace_substring(input, x.first, x.second);
+            replace_substring(input, x.first, x.second);
         }
     }
     
@@ -382,14 +382,14 @@ std::string Helper::clean_filename(std::string input) {
 }
 
 std::string Helper::url_encode_lazy(std::string input) {
-    Helper::replace_substring(input, " ", "%20");
+    replace_substring(input, " ", "%20");
     return input;
 }
 
 std::string Helper::get_extension(std::string input) {
     for (auto const &x : media_extensions) {
         const std::string needle = "." + x;
-        auto found = input.find(needle) != std::string::npos;
+        bool found = input.find(needle) != std::string::npos;
         if (found) {
             return x;
         }
