@@ -348,7 +348,7 @@ const std::map<std::string, std::string> html_entities
 
 const std::string media_extensions[] =
 { 
-    "mp3","m4a","mp4","ogg","oga","aac","flac","wma","wmv","mpg","mpeg","avi","m4v","mov","ac3","pcm","wav","alac" 
+    "mp3","m4a","mp4","ogg","oga","aac","flac","wma","wmv","mpg","mpeg","avi","m4v","mov","ac3","pcm","wav","alac","webm" 
 };
 
 void replace_substring(std::string& subject, const std::string& search, const std::string& replace) {
