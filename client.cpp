@@ -22,20 +22,14 @@
  SOFTWARE.
  */
 
-#include <iostream>
-#include "client.hpp"
+//#include <iostream>
+#include "poddl.hpp"
 
-#ifdef _WIN32
-#include "../LibsynDl.vs/wincurl/curl.h"
-#pragma comment(lib, "Normaliz.lib")
-#pragma comment(lib, "Advapi32.lib")
-#pragma comment(lib, "Ws2_32.lib")
-#pragma comment(lib, "Wldap32.Lib")
-#pragma comment(lib, "Crypt32.Lib")
-#pragma comment(lib, "../LibsynDl.vs/wincurl/libcurl_a.lib")
-#else
-#include <curl/curl.h>
-#endif
+//#ifdef _WIN32
+//#include "../LibsynDl.vs/wincurl/curl.h"
+//#else
+//#include <curl/curl.h>
+//#endif
 
 Client::Client() {
     curl_global_init(CURL_GLOBAL_ALL);

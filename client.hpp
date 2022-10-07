@@ -26,20 +26,3 @@
 #include <sstream>
 #include <string>
 
-#ifdef _WIN32
-#define CURL_STATICLIB
-#include "../LibsynDl.vs/wincurl/curl.h"
-#else
-#include <curl/curl.h>
-#endif
-
-class Client {
-private:
-    static size_t curl_write(void* buf, size_t size, size_t nmemb, void* up);
-    static CURLcode curl_read(const std::string& url, std::ostream& os);
-public:
-    Client();
-    ~Client();
-    static bool get_string_stream(std::string url, std::ostringstream &stream);
-    static bool write_file_stream(std::string url, std::ofstream &stream);
-};

@@ -21,17 +21,3 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
  */
-
-#include <string>
-#include <list>
-
-struct Podcast {
-    std::string url;
-    std::string title;
-    std::string ext;
-};
-
-class Parser {
-public:
-    std::list<Podcast> get_items(std::string xml);
-};

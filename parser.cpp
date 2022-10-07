@@ -22,11 +22,7 @@
  SOFTWARE.
  */
 
-#include "parser.hpp"
-#include "helper.hpp"
-#include <regex>
-#include <map>
-#include <algorithm>
+#include "poddl.hpp"
 
 std::string const enclosure_pattern = "<enclosure.*?url=[\"|'](.+?)[\"|'].*?>";
 std::string const title_pattern = "<title>(.+?)</title>";

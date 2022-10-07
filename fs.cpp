@@ -22,20 +22,13 @@
  SOFTWARE.
  */
 
+/*
 #include <stdio.h>
 #include <iostream>
 #include <cstring>
-#include "fs.hpp"
-#ifdef _WIN32
-#include <windows.h>
-#include <shlwapi.h>
-#include <direct.h>
-#pragma comment(lib, "Shlwapi.lib")
-#else
-#include <sys/stat.h>
-#include <unistd.h>
-#include <dirent.h>
-#endif
+*/
+
+#include "poddl.hpp"
 
 bool FileSystem::directory_exists(std::string path) {
 #ifdef _WIN32

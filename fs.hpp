@@ -22,16 +22,3 @@
  SOFTWARE.
  */
 
-#include <stdio.h>
-#include <string>
-
-class FileSystem {
-public:
-    static bool directory_exists(std::string path);
-    static bool create_directory(std::string path);
-    static bool delete_directory(std::string path);
-    static bool file_exists(std::string path);
-    static bool move_file(std::string from, std::string to);
-    static bool directory_is_empty(std::string path);
-    static bool create_directory_if_not_exists(std::string path);
-};
