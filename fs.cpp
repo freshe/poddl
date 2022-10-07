@@ -22,12 +22,6 @@
  SOFTWARE.
  */
 
-/*
-#include <stdio.h>
-#include <iostream>
-#include <cstring>
-*/
-
 #include "poddl.hpp"
 
 bool FileSystem::directory_exists(std::string path) {

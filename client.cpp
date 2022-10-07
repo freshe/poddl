@@ -22,14 +22,7 @@
  SOFTWARE.
  */
 
-//#include <iostream>
 #include "poddl.hpp"
-
-//#ifdef _WIN32
-//#include "../LibsynDl.vs/wincurl/curl.h"
-//#else
-//#include <curl/curl.h>
-//#endif
 
 Client::Client() {
     curl_global_init(CURL_GLOBAL_ALL);
