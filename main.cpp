@@ -44,6 +44,10 @@ void print_header() {
 }
 
 int main(int argc, const char *argv[]) {
+	#ifdef _WIN32
+	SetConsoleOutputCP(CP_UTF8);
+	#endif
+	
     print_header();
 
     if (argc == 1) {
@@ -101,7 +105,7 @@ int main(int argc, const char *argv[]) {
     for (auto const& item : items) {
         std::string const file_path = path + "/" + item.title + "." + item.ext;
         std::string const temp_file_path = temp_path + "/" + item.title + "." + item.ext;
-
+		
         if (FileSystem::file_exists(file_path)) {
             std::cout << "Skipping file " << file_path << std::endl;
 			count++;
