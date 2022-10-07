@@ -32,20 +32,22 @@ Client::~Client() {
     curl_global_cleanup();
 }
 
-size_t Client::curl_write(void* buf, size_t size, size_t nmemb, void* up) {
-    if (up) {
-        std::ostream& os = *static_cast<std::ostream*>(up);
-        std::streamsize len = size * nmemb;
-        
-        if (os.write(static_cast<char*>(buf), len)) {
-            return len;
-        }
+size_t Client::curl_write(void* buffer, size_t size, size_t nmemb, void* output_ptr) {
+    if (!output_ptr) {
+		return 0;
     }
-    
-    return 0;
+	
+	std::ostream& output_stream = *static_cast<std::ostream*>(output_ptr);
+	std::streamsize length = size * nmemb;
+	
+	if (output_stream.write(static_cast<char*>(buffer), length)) {
+		return length;
+	}
+
+	return 0;
 }
 
-CURLcode Client::curl_read(const std::string& url, std::ostream& os) {
+CURLcode Client::curl_read(const std::string& url, std::ostream& output_stream) {
     CURLcode code(CURLE_FAILED_INIT);
     CURL* curl = curl_easy_init();
     
@@ -54,7 +56,7 @@ CURLcode Client::curl_read(const std::string& url, std::ostream& os) {
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &Client::curl_write);
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-        curl_easy_setopt(curl, CURLOPT_FILE, &os);
+        curl_easy_setopt(curl, CURLOPT_FILE, &output_stream);
         //curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
         //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         code = curl_easy_perform(curl);
@@ -64,16 +66,16 @@ CURLcode Client::curl_read(const std::string& url, std::ostream& os) {
     return code;
 }
 
-bool Client::get_string_stream(std::string url, std::ostringstream &stream) {
-    if (CURLE_OK == Client::curl_read(url, stream)) {
+bool Client::get_string_stream(std::string url, std::ostringstream &output_stream) {
+    if (CURLE_OK == Client::curl_read(url, output_stream)) {
         return true;
     }
     
     return false;
 }
 
-bool Client::write_file_stream(std::string url, std::ofstream &stream) {
-    if (CURLE_OK == Client::curl_read(url, stream)) {
+bool Client::write_file_stream(std::string url, std::ofstream &output_stream) {
+    if (CURLE_OK == Client::curl_read(url, output_stream)) {
         return true;
     }
     

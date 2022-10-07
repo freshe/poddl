@@ -32,6 +32,9 @@ std::size_t const end_len = end_tag.length();
 
 std::list<Podcast> Parser::get_items(std::string xml) {
     std::list<Podcast> podcasts;
+    std::regex rgxEnclosure(enclosure_pattern);
+    std::regex rgxTitle(title_pattern);
+
     auto start_pos = xml.find(start_tag);
     auto end_pos = xml.find(end_tag);
     
@@ -40,8 +43,6 @@ std::list<Podcast> Parser::get_items(std::string xml) {
         auto item = xml.substr(start_pos, length);
 
         std::string url, title, ext;
-        std::regex rgxEnclosure(enclosure_pattern);
-        std::regex rgxTitle(title_pattern);
         std::smatch matchEnclosure;
         std::smatch matchTitle;
         
@@ -63,9 +64,8 @@ std::list<Podcast> Parser::get_items(std::string xml) {
             podcasts.push_back(podcast);
         }
 
-        xml = xml.replace(start_pos, length, "");
-        start_pos = xml.find(start_tag);
-        end_pos = xml.find(end_tag);
+        start_pos = xml.find(start_tag, end_pos);
+        end_pos = xml.find(end_tag, start_pos);
     }
 
     return podcasts;

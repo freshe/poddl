@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <errno.h>
 #include <algorithm>
+#include <sstream>
 #include <string>
 #include <list>
-#include <regex>
-#include <map>
 #include <iostream>
 #include <fstream>
-#include <sstream>
+#include <regex>
+#include <map>
 
 #ifdef _WIN32
 #define CURL_STATICLIB

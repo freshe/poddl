@@ -9,6 +9,7 @@ const std::map<std::string, std::string> bad_filename_characters
 
 const std::map<std::string, std::string> html_entities
 {
+	{"&quot;", "\""},
     {"&#32;", " "},
     {"&#33;", "!"},
     {"&#34;", ""},

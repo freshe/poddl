@@ -24,7 +24,7 @@
 
 #include "poddl.hpp"
 
-#define VERSION "2022.07.07"
+#define VERSION "2022.10.07"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -60,7 +60,7 @@ int main(int argc, const char *argv[]) {
     }
     
     std::string const path = argv[2];
-    std::string const tempPath = path + "/tmp";
+    std::string const temp_path = path + "/tmp";
     std::string const url = Helper::url_encode_lazy(argv[1]);
     std::ostringstream rss_stream;
 
@@ -69,8 +69,8 @@ int main(int argc, const char *argv[]) {
         return -1;
     }
 
-    if (!FileSystem::create_directory_if_not_exists(tempPath)) {
-        std::cout << "Error: Could not create temp directory " << tempPath << std::endl;
+    if (!FileSystem::create_directory_if_not_exists(temp_path)) {
+        std::cout << "Error: Could not create temp directory " << temp_path << std::endl;
         return -1;
     }
 
@@ -95,26 +95,27 @@ int main(int argc, const char *argv[]) {
         return -1;
     }
         
-    std::cout << "Downloading " << size << " files" << std::endl;
+    std::cout << "Downloading " << size << " files" << std::endl << std::endl;
     int count = 1;
             
     for (auto const& item : items) {
-        std::string const filePath = path + "/" + item.title + "." + item.ext;
-        std::string const tempFilePath = tempPath + "/" + item.title + "." + item.ext;
+        std::string const file_path = path + "/" + item.title + "." + item.ext;
+        std::string const temp_file_path = temp_path + "/" + item.title + "." + item.ext;
 
-        if (FileSystem::file_exists(filePath)) {
-            std::cout << "Skipping file " << filePath << std::endl;
+        if (FileSystem::file_exists(file_path)) {
+            std::cout << "Skipping file " << file_path << std::endl;
+			count++;
             continue;
         }
 
-        std::ofstream fs(tempFilePath, std::ostream::binary);
+        std::ofstream fs(temp_file_path, std::ostream::binary);
+        std::cout << "Downloading file " << count << "/" << size << " " << item.title << std::endl;
 
         if (client.write_file_stream(item.url, fs)) {
             fs.close();
-            std::cout << "Downloaded file " << count << "/" << size << " " << item.title << std::endl;
 
-            if (!FileSystem::move_file(tempFilePath, filePath)) {
-                std::cout << "Error moving temp file. I'm out. " << filePath << std::endl;
+            if (!FileSystem::move_file(temp_file_path, file_path)) {
+                std::cout << "Error moving temp file. I'm out. " << file_path << std::endl;
                 return -1;
             }
         } else {
@@ -124,8 +125,8 @@ int main(int argc, const char *argv[]) {
         count++;
     }
 
-    if (FileSystem::directory_is_empty(tempPath)) {
-        FileSystem::delete_directory(tempPath);
+    if (FileSystem::directory_is_empty(temp_path)) {
+        FileSystem::delete_directory(temp_path);
     }
 
     return 0;
