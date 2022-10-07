@@ -61,11 +61,11 @@ public:
 
 class Client {
 private:
-    static size_t curl_write(void* buf, size_t size, size_t nmemb, void* up);
-    static CURLcode curl_read(const std::string& url, std::ostream& os);
+    static size_t curl_write(void* buffer, size_t size, size_t nmemb, void* output_ptr);
+    static CURLcode curl_read(const std::string& url, std::ostream& output_stream);
 public:
     Client();
     ~Client();
-    static bool get_string_stream(std::string url, std::ostringstream &stream);
-    static bool write_file_stream(std::string url, std::ofstream &stream);
+    static bool get_string_stream(std::string url, std::ostringstream &output_stream);
+    static bool write_file_stream(std::string url, std::ofstream &output_stream);
 };
