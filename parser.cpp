@@ -32,8 +32,8 @@ std::size_t const end_len = end_tag.length();
 
 std::list<Podcast> Parser::get_items(std::string xml) {
     std::list<Podcast> podcasts;
-    std::regex rgxEnclosure(enclosure_pattern);
-    std::regex rgxTitle(title_pattern);
+    std::regex regex_enclosure(enclosure_pattern);
+    std::regex regex_title(title_pattern);
 
     auto start_pos = xml.find(start_tag);
     auto end_pos = xml.find(end_tag);
@@ -43,17 +43,17 @@ std::list<Podcast> Parser::get_items(std::string xml) {
         auto item = xml.substr(start_pos, length);
 
         std::string url, title, ext;
-        std::smatch matchEnclosure;
-        std::smatch matchTitle;
+        std::smatch match_enclosure;
+        std::smatch match_title;
         
         //URL
-        if (std::regex_search(item, matchEnclosure, rgxEnclosure)) {
-            url = matchEnclosure.str(1);
+        if (std::regex_search(item, match_enclosure, regex_enclosure)) {
+            url = match_enclosure.str(1);
         }
         
         //Title
-        if (std::regex_search(item, matchTitle, rgxTitle)) {
-            title = matchTitle.str(1);
+        if (std::regex_search(item, match_title, regex_title)) {
+            title = match_title.str(1);
         }
         
         if (!url.empty() && !title.empty()) {

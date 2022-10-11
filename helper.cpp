@@ -407,4 +407,52 @@ std::string Helper::get_extension(std::string input) {
     }
 
     return "file";
-} 
+}
+
+std::wstring Helper::utf8_to_wide_win_string(std::string input) {
+#ifdef _WIN32
+    int wchars_num = MultiByteToWideChar(CP_UTF8, 0, input.c_str(), -1, NULL ,0);
+    if (wchars_num == 0) {
+        return L"";
+    }
+
+    wchar_t* wstr = new wchar_t[wchars_num];
+    wchars_num = MultiByteToWideChar(CP_UTF8, 0, input.c_str(), -1, wstr, wchars_num);
+
+    if (wchars_num == 0) {
+        delete[] wstr;
+        return L"";
+    }
+
+    std::wstring output(wstr);
+    delete[] wstr;
+
+    return output;
+#else
+    return L"";
+#endif
+}
+
+std::string Helper::wide_win_string_to_utf8(std::wstring input) {
+#ifdef _WIN32
+    int chars_num = WideCharToMultiByte(CP_UTF8, 0, input.c_str(), -1, NULL, 0, NULL, NULL);
+    if (chars_num == 0) {
+        return "";
+    }
+
+    char* str = new char[chars_num];
+    chars_num = WideCharToMultiByte(CP_UTF8, 0, input.c_str(), -1, str, chars_num, NULL, NULL);
+    
+    if (chars_num == 0) {
+        delete[] str;
+        return "";
+    }
+    
+    std::string output(str);
+    delete[] str;
+    
+    return output;
+#else
+    return "";
+#endif
+}

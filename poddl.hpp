@@ -46,10 +46,21 @@ public:
     static std::string clean_filename(std::string input);
     static std::string url_encode_lazy(std::string input);
     static std::string get_extension(std::string input);
+    static std::wstring utf8_to_wide_win_string(std::string input);
+    static std::string wide_win_string_to_utf8(std::wstring input);
 };
 
 class FileSystem {
 public:
+#ifdef _WIN32
+    static bool directory_exists(std::wstring path);
+    static bool create_directory(std::wstring path);
+    static bool delete_directory(std::wstring path);
+    static bool file_exists(std::wstring path);
+    static bool move_file(std::wstring from, std::wstring to);
+    static bool directory_is_empty(std::wstring path);
+    static bool create_directory_if_not_exists(std::wstring path);
+#else
     static bool directory_exists(std::string path);
     static bool create_directory(std::string path);
     static bool delete_directory(std::string path);
@@ -57,6 +68,7 @@ public:
     static bool move_file(std::string from, std::string to);
     static bool directory_is_empty(std::string path);
     static bool create_directory_if_not_exists(std::string path);
+#endif
 };
 
 class Client {

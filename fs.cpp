@@ -24,48 +24,69 @@
 
 #include "poddl.hpp"
 
-bool FileSystem::directory_exists(std::string path) {
 #ifdef _WIN32
-    DWORD file_attributes = GetFileAttributesA(path.c_str());
+bool FileSystem::directory_exists(std::wstring path) {
+    DWORD file_attributes = GetFileAttributesW(path.c_str());
     return file_attributes != INVALID_FILE_ATTRIBUTES && (file_attributes & FILE_ATTRIBUTE_DIRECTORY) > 0;
+}
+
+bool FileSystem::create_directory(std::wstring path) {
+    return CreateDirectoryW(path.c_str(), NULL) != 0;
+}
+
+bool FileSystem::delete_directory(std::wstring path) {
+    return RemoveDirectoryW(path.c_str()) != 0;
+}
+
+bool FileSystem::file_exists(std::wstring path) {
+    DWORD file_attributes = GetFileAttributesW(path.c_str());
+    return file_attributes != INVALID_FILE_ATTRIBUTES && !(file_attributes & FILE_ATTRIBUTE_DIRECTORY);
+}
+
+bool FileSystem::move_file(std::wstring from, std::wstring to) {
+    return MoveFileW(from.c_str(), to.c_str()) != 0;
+}
+
+bool FileSystem::directory_is_empty(std::wstring path) {
+    bool exists = directory_exists(path);
+    if (!exists) {
+        return false;
+    }
+
+    return PathIsDirectoryEmptyW(path.c_str());
+}
+
+bool FileSystem::create_directory_if_not_exists(std::wstring path) {
+    if (!directory_exists(path)) {
+        if (!create_directory(path)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 #else
+
+bool FileSystem::directory_exists(std::string path) {
     struct stat st;
     return stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode);
-#endif
 }
 
 bool FileSystem::create_directory(std::string path) {
-#ifdef _WIN32
-    return CreateDirectoryA(path.c_str(), NULL) != 0;
-#else
     return mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0;
-#endif
 }
 
 bool FileSystem::delete_directory(std::string path) {
-#ifdef _WIN32
-    return RemoveDirectoryA(path.c_str()) != 0;
-#else
     return rmdir(path.c_str()) == 0;
-#endif
 }
 
 bool FileSystem::file_exists(std::string path) {
-#ifdef _WIN32
-    DWORD file_attributes = GetFileAttributesA(path.c_str());
-    return file_attributes != INVALID_FILE_ATTRIBUTES && !(file_attributes & FILE_ATTRIBUTE_DIRECTORY);
-#else
     struct stat st;
     return stat(path.c_str(), &st) == 0;
-#endif
 }
 
 bool FileSystem::move_file(std::string from, std::string to) {
-#ifdef _WIN32
-    return MoveFileEx(from.c_str(), to.c_str(), MOVEFILE_REPLACE_EXISTING) != 0;
-#else
     return rename(from.c_str(), to.c_str()) == 0;
-#endif
 }
 
 bool FileSystem::directory_is_empty(std::string path) {
@@ -73,9 +94,7 @@ bool FileSystem::directory_is_empty(std::string path) {
     if (!exists) {
         return false;
     }
-#ifdef _WIN32
-    return PathIsDirectoryEmptyA(path.c_str());
-#else
+
     int c = 0;
     dirent* d;
     DIR* dir = opendir(path.c_str());
@@ -98,7 +117,6 @@ bool FileSystem::directory_is_empty(std::string path) {
 
     closedir(dir);
     return c == 0;
-#endif
 }
 
 bool FileSystem::create_directory_if_not_exists(std::string path) {
@@ -109,3 +127,5 @@ bool FileSystem::create_directory_if_not_exists(std::string path) {
     }
     return true;
 }
+
+#endif

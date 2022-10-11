@@ -24,7 +24,12 @@
 
 #include "poddl.hpp"
 
-#define VERSION "2022.10.07"
+/*
+ *  Windows uses UTF-16
+ *  I need therapy now
+ */
+
+#define VERSION "2022.10.11"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -43,11 +48,11 @@ void print_header() {
     std::cout << std::endl;
 }
 
+#ifdef _WIN32
+int wmain(int argc, const wchar_t *argv[]) {
+#else
 int main(int argc, const char *argv[]) {
-	#ifdef _WIN32
-	SetConsoleOutputCP(CP_UTF8);
-	#endif
-	
+#endif
     print_header();
 
     if (argc == 1) {
@@ -62,19 +67,33 @@ int main(int argc, const char *argv[]) {
         print_help();
         return -1;
     }
-    
+
+#ifdef _WIN32
+    std::string const url = Helper::wide_win_string_to_utf8(argv[1]);
+    std::wstring const path = argv[2];
+    std::wstring const temp_path = path + L"/tmp";
+#else
+    std::string const url = argv[1];
     std::string const path = argv[2];
     std::string const temp_path = path + "/tmp";
-    std::string const url = Helper::url_encode_lazy(argv[1]);
+#endif
     std::ostringstream rss_stream;
 
     if (!FileSystem::create_directory_if_not_exists(path)) {
+#ifdef _WIN32
+        std::wcout << "Error: Could not create directory " << path << std::endl;
+#else
         std::cout << "Error: Could not create directory " << path << std::endl;
+#endif
         return -1;
     }
 
     if (!FileSystem::create_directory_if_not_exists(temp_path)) {
+#ifdef _WIN32
+        std::wcout << "Error: Could not create temp directory " << temp_path << std::endl;
+#else
         std::cout << "Error: Could not create temp directory " << temp_path << std::endl;
+#endif
         return -1;
     }
 
@@ -103,11 +122,23 @@ int main(int argc, const char *argv[]) {
     int count = 1;
             
     for (auto const& item : items) {
+#ifdef _WIN32
+        std::wstring const file_path = 
+            path + L"/" + Helper::utf8_to_wide_win_string(item.title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
+
+        std::wstring const temp_file_path = 
+            temp_path + L"/" + Helper::utf8_to_wide_win_string(item.title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
+#else
         std::string const file_path = path + "/" + item.title + "." + item.ext;
         std::string const temp_file_path = temp_path + "/" + item.title + "." + item.ext;
-		
+#endif
+
         if (FileSystem::file_exists(file_path)) {
+#ifdef _WIN32
+            std::wcout << L"Skipping file " << file_path << std::endl;
+#else
             std::cout << "Skipping file " << file_path << std::endl;
+#endif
 			count++;
             continue;
         }
@@ -119,11 +150,19 @@ int main(int argc, const char *argv[]) {
             fs.close();
 
             if (!FileSystem::move_file(temp_file_path, file_path)) {
+#ifdef _WIN32
+                std::wcout << L"Error moving temp file. I'm out. " << file_path << std::endl;
+#else
                 std::cout << "Error moving temp file. I'm out. " << file_path << std::endl;
+#endif
                 return -1;
             }
         } else {
+#ifdef _WIN32
+            std::cout << L"Error downloading file " << item.title << std::endl;
+#else
             std::cout << "Error downloading file " << item.title << std::endl;
+#endif
         }
 
         count++;
