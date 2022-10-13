@@ -46,8 +46,10 @@ public:
     static std::string clean_filename(std::string input);
     static std::string url_encode_lazy(std::string input);
     static std::string get_extension(std::string input);
+#ifdef _WIN32
     static std::wstring utf8_to_wide_win_string(std::string input);
     static std::string wide_win_string_to_utf8(std::wstring input);
+#endif
 };
 
 class FileSystem {

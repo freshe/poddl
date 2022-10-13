@@ -25,7 +25,7 @@
 #include "poddl.hpp"
 
 /*
- *  Windows uses UTF-16 for filenames but can't output it correctly to console?
+ *  Windows uses UTF-16 for filenames but can't output it correctly to console?!
  *  I need therapy now
  */
 
