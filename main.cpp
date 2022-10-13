@@ -25,7 +25,7 @@
 #include "poddl.hpp"
 
 /*
- *  Windows uses UTF-16
+ *  Windows uses UTF-16 for filenames but can't output it correctly to console?
  *  I need therapy now
  */
 
@@ -50,6 +50,7 @@ void print_header() {
 
 #ifdef _WIN32
 int wmain(int argc, const wchar_t *argv[]) {
+	SetConsoleOutputCP(CP_UTF8);
 #else
 int main(int argc, const char *argv[]) {
 #endif
@@ -72,28 +73,24 @@ int main(int argc, const char *argv[]) {
     std::string const url = Helper::wide_win_string_to_utf8(argv[1]);
     std::wstring const path = argv[2];
     std::wstring const temp_path = path + L"/tmp";
+	std::string const print_path = Helper::wide_win_string_to_utf8(path);
+	std::string const print_temp_path = Helper::wide_win_string_to_utf8(temp_path);
 #else
     std::string const url = argv[1];
     std::string const path = argv[2];
     std::string const temp_path = path + "/tmp";
+	std::string const print_path = path;
+	std::string const print_temp_path = temp_path;
 #endif
     std::ostringstream rss_stream;
 
     if (!FileSystem::create_directory_if_not_exists(path)) {
-#ifdef _WIN32
-        std::wcout << "Error: Could not create directory " << path << std::endl;
-#else
-        std::cout << "Error: Could not create directory " << path << std::endl;
-#endif
+        std::cout << "Error: Could not create directory " << print_path << std::endl;
         return -1;
     }
 
     if (!FileSystem::create_directory_if_not_exists(temp_path)) {
-#ifdef _WIN32
-        std::wcout << "Error: Could not create temp directory " << temp_path << std::endl;
-#else
-        std::cout << "Error: Could not create temp directory " << temp_path << std::endl;
-#endif
+        std::cout << "Error: Could not create temp directory " << print_temp_path << std::endl;
         return -1;
     }
 
@@ -123,22 +120,19 @@ int main(int argc, const char *argv[]) {
             
     for (auto const& item : items) {
 #ifdef _WIN32
-        std::wstring const file_path = 
-            path + L"/" + Helper::utf8_to_wide_win_string(item.title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
-
-        std::wstring const temp_file_path = 
-            temp_path + L"/" + Helper::utf8_to_wide_win_string(item.title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
+        std::wstring const file_path = path + L"/" + Helper::utf8_to_wide_win_string(item.title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
+        std::wstring const temp_file_path = temp_path + L"/" + Helper::utf8_to_wide_win_string(item.title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
+		std::string const print_file_path = Helper::wide_win_string_to_utf8(file_path);
+		std::string const print_temp_file_path = Helper::wide_win_string_to_utf8(temp_file_path);
 #else
         std::string const file_path = path + "/" + item.title + "." + item.ext;
         std::string const temp_file_path = temp_path + "/" + item.title + "." + item.ext;
+		std::string const print_file_path = file_path;
+		std::string const print_temp_file_path = temp_file_path;
 #endif
 
         if (FileSystem::file_exists(file_path)) {
-#ifdef _WIN32
-            std::wcout << L"Skipping file " << file_path << std::endl;
-#else
-            std::cout << "Skipping file " << file_path << std::endl;
-#endif
+            std::cout << "Skipping file " << print_file_path << std::endl;
 			count++;
             continue;
         }
@@ -150,19 +144,11 @@ int main(int argc, const char *argv[]) {
             fs.close();
 
             if (!FileSystem::move_file(temp_file_path, file_path)) {
-#ifdef _WIN32
-                std::wcout << L"Error moving temp file. I'm out. " << file_path << std::endl;
-#else
-                std::cout << "Error moving temp file. I'm out. " << file_path << std::endl;
-#endif
+                std::cout << "Error moving temp file. I'm out. " << print_file_path << std::endl;
                 return -1;
             }
         } else {
-#ifdef _WIN32
-            std::cout << L"Error downloading file " << item.title << std::endl;
-#else
             std::cout << "Error downloading file " << item.title << std::endl;
-#endif
         }
 
         count++;
