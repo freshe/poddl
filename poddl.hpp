@@ -25,6 +25,7 @@
 #else
 #include <unistd.h>
 #include <dirent.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <curl/curl.h>
 #endif
