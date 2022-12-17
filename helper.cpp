@@ -362,6 +362,94 @@ const std::string media_extensions[] =
     "mp3","m4a","mp4","ogg","oga","aac","flac","wma","wmv","mpg","mpeg","avi","m4v","mov","ac3","pcm","wav","alac","webm" 
 };
 
+#ifdef _WIN32
+std::vector<std::string> Helper::get_args(int argc, const wchar_t *argv[]) {
+	std::vector<std::string> v;
+	
+	for (int i = 1; i < argc; i++) {
+		const wchar_t *arg = argv[i];
+		const std::wstring wstr(arg);
+		const std::string str = Helper::wide_win_string_to_utf8(wstr);
+		v.push_back(str);
+	}
+
+	return v;
+}
+#else
+std::vector<std::string> Helper::get_args(int argc, const char *argv[]) {
+	std::vector<std::string> v;
+	
+	for (int i = 1; i < argc; i++) {
+		const char *arg = argv[i];
+		const std::string str(arg);
+		v.push_back(str);
+	}
+
+	return v;
+}
+#endif
+
+int int_try_parse(std::string text) {
+	char* endptr;
+	int number = strtol(text.c_str(), &endptr, 10);
+
+	if (endptr == text.c_str() + text.size()) {
+		return number;
+	}
+
+	return 0;
+}
+
+Options Helper::get_options(std::vector<std::string> args) {
+	Options options;
+
+	for (size_t i = 0; i != args.size(); i++) {
+		auto const x = args[i];
+
+		if (x == "-n") {
+			if ( !(i + 1 <= args.size() - 1) ) {
+				continue;
+			}
+
+			auto const n = args[i + 1];
+			auto const d = n.find("-");
+
+			if (d != std::string::npos) {
+				auto const a = n.substr(0, d);
+				auto const b = n.substr(d + 1);
+
+				options.episode_from = int_try_parse(a);
+				options.episode_to = int_try_parse(b);
+			} else {
+				options.episode_from = int_try_parse(n);
+			}
+
+			if (options.episode_from <= 0) {
+				options.episode_from = 1;
+			}
+
+			if (options.episode_to == 0 || 
+				options.episode_from > options.episode_to) {
+				options.episode_to = options.episode_from;
+			}
+
+			i = i + 1;
+			continue;
+		} else if (x == "-l") {
+			options.listOnly = true;
+		} else {
+			/* this will hopefully prevent a breaking change */
+			if (options.url.empty()) {
+				options.url = x;
+			} else {
+				options.path = x;
+			}
+		}
+	}
+
+	return options;
+}
+
 void replace_substring(std::string& subject, const std::string& search, const std::string& replace) {
     size_t pos = 0;
     while ((pos = subject.find(search, pos)) != std::string::npos) {

@@ -30,14 +30,15 @@ std::string const start_tag = "<item>";
 std::string const end_tag = "</item>";
 std::size_t const end_len = end_tag.length();
 
-std::list<Podcast> Parser::get_items(std::string xml) {
-    std::list<Podcast> podcasts;
+std::vector<Podcast> Parser::get_items(std::string xml) {
+    std::vector<Podcast> podcasts;
     std::regex regex_enclosure(enclosure_pattern);
     std::regex regex_title(title_pattern);
 
     auto start_pos = xml.find(start_tag);
     auto end_pos = xml.find(end_tag);
-    
+    int count = 1;
+
     while (start_pos >= 0 && end_pos > start_pos) {
         auto length = (end_pos - start_pos) + end_len;
         auto item = xml.substr(start_pos, length);
@@ -58,10 +59,13 @@ std::list<Podcast> Parser::get_items(std::string xml) {
         
         if (!url.empty() && !title.empty()) {
             auto podcast = Podcast();
+			podcast.number = count;
             podcast.url = Helper::url_encode_lazy(url);
             podcast.title = Helper::clean_filename(Helper::html_decode(title));
             podcast.ext = Helper::get_extension(url);
             podcasts.push_back(podcast);
+			
+			count++;
         }
 
         start_pos = xml.find(start_tag, end_pos);

@@ -39,6 +39,12 @@ void print_help() {
 #else
     std::cout << "./poddl http://url.to.rss /OutputPath" << std::endl;
 #endif
+
+	std::cout << std::endl;
+	std::cout << "Optional arguments:" << std::endl;
+	std::cout << "-l = Only display list of episodes" << std::endl;
+	std::cout << "-n [n] = Download a single episode" << std::endl;
+	std::cout << "-n [n-n] = Download a range of episode" << std::endl;
     std::cout << std::endl;
 }
 
@@ -56,57 +62,75 @@ int main(int argc, const char *argv[]) {
 #endif
     print_header();
 
-    if (argc == 1) {
-        print_help();
-        return -1;
-    }
+	/*
+	 * 	-l		List
+	 *  -n 1	Download episode 1	
+	 *	-n 1-3	Download episode 1-3
+	 */
 
-    if (argc != 3) {
+	const auto args = Helper::get_args(argc, argv);
+
+	if (args.size() == 0) {
+		print_help();
+        return -1;
+	}
+
+	const auto options = Helper::get_options(args);
+
+	if (options.url.empty() || ( options.path.empty() && !options.listOnly )) {
         std::cout << "Error: Invalid input";
         std::cout << std::endl;
         std::cout << std::endl;
         print_help();
         return -1;
-    }
+	}
+
+	std::string const url = options.url;
 
 #ifdef _WIN32
-    std::string const url = Helper::wide_win_string_to_utf8(argv[1]);
-    std::wstring const path = argv[2];
+	std::wstring const path = Helper::utf8_to_wide_win_string(options.path);
     std::wstring const temp_path = path + L"/tmp";
 	std::string const print_path = Helper::wide_win_string_to_utf8(path);
 	std::string const print_temp_path = Helper::wide_win_string_to_utf8(temp_path);
 #else
-    std::string const url = argv[1];
-    std::string const path = argv[2];
+	std::string const path = options.path;
     std::string const temp_path = path + "/tmp";
 	std::string const print_path = path;
 	std::string const print_temp_path = temp_path;
 #endif
     std::ostringstream rss_stream;
 
-    if (!FileSystem::create_directory_if_not_exists(path)) {
-        std::cout << "Error: Could not create directory " << print_path << std::endl;
-        return -1;
-    }
+	if (!options.listOnly) {
+		if (!FileSystem::create_directory_if_not_exists(path)) {
+			std::cout << "Error: Could not create directory " << print_path << std::endl;
+			return -1;
+		}
 
-    if (!FileSystem::create_directory_if_not_exists(temp_path)) {
-        std::cout << "Error: Could not create temp directory " << print_temp_path << std::endl;
-        return -1;
-    }
+		if (!FileSystem::create_directory_if_not_exists(temp_path)) {
+			std::cout << "Error: Could not create temp directory " << print_temp_path << std::endl;
+			return -1;
+		}
+	}
 
-    auto client = Client();
+ 	auto client = Client();
     auto parser = Parser();
 
     std::cout << "Fetching URL: " << url << std::endl;
-    auto rss_success = client.get_string_stream(url, rss_stream);
+    const auto rss_success = client.get_string_stream(url, rss_stream);
     
     if (!rss_success) {
         std::cout << "Error: Invalid response from URL" << std::endl;
         return -1;
     }
 
-    auto xml = rss_stream.str();
+    const auto xml = rss_stream.str();
     auto items = parser.get_items(xml);
+
+	if (options.episode_from > 0) {
+		auto temp = Helper::slice_vector(items, options.episode_from, options.episode_to);
+		items = temp;
+	}
+
     auto size = items.size();
     auto success = size > 0;
 
@@ -115,9 +139,9 @@ int main(int argc, const char *argv[]) {
         return -1;
     }
         
-    std::cout << "Downloading " << size << " files" << std::endl << std::endl;
+    std::cout << (options.listOnly ? "Listing " : "Downloading ") << size << " files" << std::endl << std::endl;
     int count = 1;
-            
+
     for (auto const& item : items) {
 #ifdef _WIN32
         std::wstring const file_path = path + L"/" + Helper::utf8_to_wide_win_string(item.title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
@@ -130,6 +154,11 @@ int main(int argc, const char *argv[]) {
 		std::string const print_file_path = file_path;
 		std::string const print_temp_file_path = temp_file_path;
 #endif
+		if (options.listOnly) {
+			std::cout << "[" << item.number << "]" << " " << item.title << std::endl;
+			count++;
+			continue;
+		}
 
         if (FileSystem::file_exists(file_path)) {
             std::cout << "Skipping file " << print_file_path << std::endl;

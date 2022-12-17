@@ -4,10 +4,12 @@
 #include <sstream>
 #include <string>
 #include <list>
+#include <vector>
 #include <iostream>
 #include <fstream>
 #include <regex>
 #include <map>
+#include <cstdlib>
 
 #ifdef _WIN32
 #define CURL_STATICLIB
@@ -31,18 +33,32 @@
 #endif
 
 struct Podcast {
+	int number;
     std::string url;
     std::string title;
     std::string ext;
 };
 
+struct Options {
+	bool listOnly = false;
+	int episode_from = 0;
+	int episode_to = 0;
+	std::string url {};
+	std::string path {};
+};
+
 class Parser {
 public:
-    std::list<Podcast> get_items(std::string xml);
+    std::vector<Podcast> get_items(std::string xml);
 };
 
 class Helper {
 public:
+	static Options get_options(std::vector<std::string> args);
+	
+	template <typename T>
+	static std::vector<T> slice_vector(std::vector<T> items, int from, int to);
+
     static std::string html_decode(std::string input);
     static std::string clean_filename(std::string input);
     static std::string url_encode_lazy(std::string input);
@@ -50,8 +66,25 @@ public:
 #ifdef _WIN32
     static std::wstring utf8_to_wide_win_string(std::string input);
     static std::string wide_win_string_to_utf8(std::wstring input);
+	static std::vector<std::string> get_args(int argc, const wchar_t *argv[]);
+#else
+	static std::vector<std::string> get_args(int argc, const char *argv[]);
 #endif
 };
+
+template <typename T>
+std::vector<T> Helper::slice_vector(std::vector<T> items, int from, int to) {
+	/* check range */
+	if (from <= items.size() && to <= items.size()) {
+		auto a = items.begin() + from - 1;
+		auto b = items.begin() + to;
+		auto c = std::vector<T>(a, b);
+		
+		return c;
+	}
+	
+	return items;
+}
 
 class FileSystem {
 public:
