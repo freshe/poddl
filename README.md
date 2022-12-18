@@ -4,6 +4,11 @@
 How to use:  
 > $ ./poddl http://url.to.rss /OutputPath
 
+Optional arguments:  
+-l = Only display list of episodes  
+-n [n] = Download a single episode  
+-n [n-n] = Download a range of episode
+
 How to build:
 > $ g++ *.cpp -O2 -std=c++11 -lcurl -o poddl
 
