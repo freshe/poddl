@@ -436,7 +436,7 @@ Options Helper::get_options(std::vector<std::string> args) {
 			i = i + 1;
 			continue;
 		} else if (x == "-l") {
-			options.listOnly = true;
+			options.list_only = true;
 		} else {
 			/* this will hopefully prevent a breaking change */
 			if (options.url.empty()) {

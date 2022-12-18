@@ -40,7 +40,7 @@ struct Podcast {
 };
 
 struct Options {
-	bool listOnly = false;
+	bool list_only = false;
 	int episode_from = 0;
 	int episode_to = 0;
 	std::string url {};

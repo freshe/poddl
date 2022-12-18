@@ -77,7 +77,7 @@ int main(int argc, const char *argv[]) {
 
 	const auto options = Helper::get_options(args);
 
-	if (options.url.empty() || ( options.path.empty() && !options.listOnly )) {
+	if (options.url.empty() || ( options.path.empty() && !options.list_only )) {
         std::cout << "Error: Invalid input";
         std::cout << std::endl;
         std::cout << std::endl;
@@ -100,7 +100,7 @@ int main(int argc, const char *argv[]) {
 #endif
     std::ostringstream rss_stream;
 
-	if (!options.listOnly) {
+	if (!options.list_only) {
 		if (!FileSystem::create_directory_if_not_exists(path)) {
 			std::cout << "Error: Could not create directory " << print_path << std::endl;
 			return -1;
@@ -139,10 +139,16 @@ int main(int argc, const char *argv[]) {
         return -1;
     }
         
-    std::cout << (options.listOnly ? "Listing " : "Downloading ") << size << " files" << std::endl << std::endl;
+    std::cout << (options.list_only ? "Listing " : "Downloading ") << size << " files" << std::endl << std::endl;
     int count = 1;
 
     for (auto const& item : items) {
+		if (options.list_only) {
+			std::cout << "[" << item.number << "]" << " " << item.title << std::endl;
+			count++;
+			continue;
+		}
+
 #ifdef _WIN32
         std::wstring const file_path = path + L"/" + Helper::utf8_to_wide_win_string(item.title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
         std::wstring const temp_file_path = temp_path + L"/" + Helper::utf8_to_wide_win_string(item.title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
@@ -154,11 +160,7 @@ int main(int argc, const char *argv[]) {
 		std::string const print_file_path = file_path;
 		std::string const print_temp_file_path = temp_file_path;
 #endif
-		if (options.listOnly) {
-			std::cout << "[" << item.number << "]" << " " << item.title << std::endl;
-			count++;
-			continue;
-		}
+
 
         if (FileSystem::file_exists(file_path)) {
             std::cout << "Skipping file " << print_file_path << std::endl;
