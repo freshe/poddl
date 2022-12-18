@@ -160,8 +160,6 @@ int main(int argc, const char *argv[]) {
 		std::string const print_file_path = file_path;
 		std::string const print_temp_file_path = temp_file_path;
 #endif
-
-
         if (FileSystem::file_exists(file_path)) {
             std::cout << "Skipping file " << print_file_path << std::endl;
 			count++;
