@@ -1,5 +1,5 @@
 # poddl - podcast downloader
-*poddl is a small cross platform command line tool for downloading all podcast episodes from an RSS feed.*
+*poddl is a small cross platform command line tool for downloading all, individual, or a range of podcast episodes from an RSS feed.*
 
 How to use:  
 > $ ./poddl http://url.to.rss /OutputPath
