@@ -112,8 +112,8 @@ int main(int argc, const char *argv[]) {
 		}
 	}
 
- 	auto client = Client();
-    auto parser = Parser();
+ 	Client client;
+    Parser parser;
 
     std::cout << "Fetching URL: " << url << std::endl;
     const auto rss_success = client.get_string_stream(url, rss_stream);
@@ -126,7 +126,7 @@ int main(int argc, const char *argv[]) {
     const auto xml = rss_stream.str();
     auto items = parser.get_items(xml);
 
-	if (options.episode_from > 0) {
+	if (options.episode_from >= 0) {
 		auto temp = Helper::slice_vector(items, options.episode_from, options.episode_to);
 		items = temp;
 	}
@@ -167,7 +167,7 @@ int main(int argc, const char *argv[]) {
         }
 
         std::ofstream fs(temp_file_path, std::ostream::binary);
-        std::cout << "Downloading file " << count << "/" << size << " " << item.title << std::endl;
+        std::cout << "Downloading file " << count << "/" << size << " " << "[" << item.number << "]" << " " << item.title << std::endl;
 
         if (client.write_file_stream(item.url, fs)) {
             fs.close();

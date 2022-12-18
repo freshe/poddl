@@ -422,19 +422,10 @@ Options Helper::get_options(std::vector<std::string> args) {
 				options.episode_to = int_try_parse(b);
 			} else {
 				options.episode_from = int_try_parse(n);
-			}
-
-			if (options.episode_from <= 0) {
-				options.episode_from = 1;
-			}
-
-			if (options.episode_to == 0 || 
-				options.episode_from > options.episode_to) {
 				options.episode_to = options.episode_from;
 			}
 
 			i = i + 1;
-			continue;
 		} else if (x == "-l") {
 			options.list_only = true;
 		} else {

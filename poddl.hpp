@@ -41,8 +41,8 @@ struct Podcast {
 
 struct Options {
 	bool list_only = false;
-	int episode_from = 0;
-	int episode_to = 0;
+	int episode_from = -1;
+	int episode_to = -1;
 	std::string url {};
 	std::string path {};
 };
@@ -57,7 +57,7 @@ public:
 	static Options get_options(std::vector<std::string> args);
 	
 	template <typename T>
-	static std::vector<T> slice_vector(std::vector<T> items, int from, int to);
+	static std::vector<T> slice_vector(std::vector<T> &items, int from, int to);
 
     static std::string html_decode(std::string input);
     static std::string clean_filename(std::string input);
@@ -73,17 +73,21 @@ public:
 };
 
 template <typename T>
-std::vector<T> Helper::slice_vector(std::vector<T> items, int from, int to) {
+std::vector<T> Helper::slice_vector(std::vector<T> &items, int from, int to) {
 	/* check range */
-	if (from <= items.size() && to <= items.size()) {
-		auto a = items.begin() + from - 1;
-		auto b = items.begin() + to;
-		auto c = std::vector<T>(a, b);
-		
-		return c;
+	if ( !(from >= 1 && to >= from) ) {
+		return std::vector<T> {};
 	}
+
+	if (to > items.size()) {
+		to = items.size();
+	}
+
+	auto a = items.begin() + from - 1;
+	auto b = items.begin() + to;
+	auto c = std::vector<T>(a, b);
 	
-	return items;
+	return c;
 }
 
 class FileSystem {
