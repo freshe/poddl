@@ -7,7 +7,7 @@ How to use:
 Optional arguments:  
 -l = Only display list of episodes  
 -n [n] = Download a single episode  
--n [n-n] = Download a range of episode
+-n [n-n] = Download a range of episodes
 
 How to build:
 > $ g++ *.cpp -O2 -std=c++11 -lcurl -o poddl

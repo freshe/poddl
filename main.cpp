@@ -44,7 +44,7 @@ void print_help() {
 	std::cout << "Optional arguments:" << std::endl;
 	std::cout << "-l = Only display list of episodes" << std::endl;
 	std::cout << "-n [n] = Download a single episode" << std::endl;
-	std::cout << "-n [n-n] = Download a range of episode" << std::endl;
+	std::cout << "-n [n-n] = Download a range of episodes" << std::endl;
     std::cout << std::endl;
 }
 
