@@ -1,7 +1,7 @@
 /*
  MIT License
  
- Copyright (c) 2019 Fredrik Blank
+ Copyright (c) 2019 Fredrik B
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,11 @@
  */
 
 #include "poddl.hpp"
+
+/*
+ CURL
+ Copyright (c) 1996 - 2023, Daniel Stenberg, daniel@haxx.se, and many contributors
+*/
 
 Client::Client() {
     curl_global_init(CURL_GLOBAL_ALL);

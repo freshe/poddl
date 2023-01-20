@@ -1,7 +1,7 @@
 /*
  MIT License
  
- Copyright (c) 2019 Fredrik Blank
+ Copyright (c) 2019 Fredrik B
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -29,13 +29,13 @@
  *  I need therapy now
  */
 
-#define VERSION "2022.12.18"
+#define VERSION "2023.01.20"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
     
 #ifdef _WIN32
-    std::cout << "poddl.exe http://url.to.rss /OutputPath" << std::endl;
+    std::cout << "poddl.exe http://url.to.rss C:\\OutputPath" << std::endl;
 #else
     std::cout << "./poddl http://url.to.rss /OutputPath" << std::endl;
 #endif
