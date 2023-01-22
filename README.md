@@ -16,7 +16,7 @@ Precompiled binaries
 <sub><sup>Windows x64</sup></sub>  
 https://github.com/freshe/poddl/raw/master/bin/poddl-win-x64.zip  
 <sub><sup>Windows arm64</sup></sub>  
-https://github.com/freshe/poddl/raw/master/bin/poddl-win-arm64.zip 
+https://github.com/freshe/poddl/raw/master/bin/poddl-win-arm64.zip  
 <sub><sup>Linux x64 (Tested on Debian 11)</sup></sub>  
 https://github.com/freshe/poddl/raw/master/bin/poddl-linux-x64.zip
 
