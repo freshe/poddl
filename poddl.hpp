@@ -40,14 +40,21 @@
 #include <windows.h>
 #include <shlwapi.h>
 #include <direct.h>
-#include "../wincurl/curl.h"
 #pragma comment(lib, "Shlwapi.lib")
 #pragma comment(lib, "Normaliz.lib")
 #pragma comment(lib, "Advapi32.lib")
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Wldap32.lib")
 #pragma comment(lib, "Crypt32.lib")
-#pragma comment(lib, "../wincurl/libcurl_a.lib")
+
+#ifdef WINARM64
+#include "../wincurl-arm64/curl.h"
+#pragma comment(lib, "../wincurl-arm64/libcurl_a.lib")
+#else
+#include "../wincurl-x64/curl.h"
+#pragma comment(lib, "../wincurl-x64/libcurl_a.lib")
+#endif
+
 #else
 #include <unistd.h>
 #include <dirent.h>
