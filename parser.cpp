@@ -60,7 +60,7 @@ std::vector<Podcast> Parser::get_items(std::string xml) {
         
         if (!url.empty() && !title.empty()) {
             Podcast podcast {};
-            podcast.url = Helper::url_encode_lazy(url);
+            podcast.url = Helper::url_encode_lazy(Helper::html_decode(url));
             podcast.title = Helper::clean_filename(Helper::html_decode(title));
             podcast.ext = Helper::get_extension(url);
             temp.push_back(podcast);

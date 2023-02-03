@@ -455,7 +455,7 @@ Options Helper::get_options(std::vector<std::string> args) {
 		} else {
 			/* this will hopefully prevent a breaking change */
 			if (options.url.empty()) {
-				options.url = x;
+				options.url = url_encode_lazy(html_decode(x));
 			} else {
 				options.path = x;
 			}
