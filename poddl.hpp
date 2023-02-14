@@ -85,12 +85,10 @@ public:
 
 class Helper {
 public:
+    template <typename T>
+    static std::vector<T> slice_vector(std::vector<T> &items, int from, int to);
+    
 	static Options get_options(std::vector<std::string> args);
-	
-	template <typename T>
-	static std::vector<T> slice_vector(std::vector<T> &items, int from, int to);
-
-    static std::string html_decode(std::string input);
     static std::string clean_filename(std::string input);
     static std::string url_encode_lazy(std::string input);
     static std::string get_extension(std::string input);

@@ -23,6 +23,7 @@
  */
 
 #include "poddl.hpp"
+#include "html_coder.hpp"
 
 std::string const enclosure_pattern = "<enclosure.*?url=[\"|'](.+?)[\"|'].*?>";
 std::string const title_pattern = "<title>(.+?)</title>";
@@ -31,6 +32,7 @@ std::string const end_tag = "</item>";
 std::size_t const end_len = end_tag.length();
 
 std::vector<Podcast> Parser::get_items(std::string xml) {
+    fb::HtmlCoder html_coder;
     std::vector<Podcast> temp;
 	std::vector<Podcast> output;
 
@@ -60,8 +62,8 @@ std::vector<Podcast> Parser::get_items(std::string xml) {
         
         if (!url.empty() && !title.empty()) {
             Podcast podcast {};
-            podcast.url = Helper::url_encode_lazy(Helper::html_decode(url));
-            podcast.title = Helper::clean_filename(Helper::html_decode(title));
+            podcast.url = Helper::url_encode_lazy(html_coder.decode(url));
+            podcast.title = Helper::clean_filename(html_coder.decode(title));
             podcast.ext = Helper::get_extension(url);
             temp.push_back(podcast);
         }
