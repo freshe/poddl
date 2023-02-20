@@ -116,8 +116,8 @@ std::string fb::HtmlCoder::decode(std::string input) {
             }
         } else {
             /* Named entity. &amp; and things like that */
-            auto pos = named_html_entities.find(item);
-            if (pos != named_html_entities.end()) {
+            auto pos = HtmlCoder::named_html_entities.find(item);
+            if (pos != HtmlCoder::named_html_entities.end()) {
                 decoded = pos->second;
             }
         }
