@@ -39,7 +39,7 @@ Optional arguments:
   </tr>
 </table>
 
-How to build:
+Build from source:
 > $ g++ *.cpp -O2 -std=c++11 -lcurl -o poddl
 
 Website  
