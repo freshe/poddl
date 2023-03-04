@@ -31,10 +31,18 @@ Optional arguments:
   </tr>
   <tr>
     <td>
-      Linux x64 (Tested on Debian 11)
+      Linux x64 (Ubuntu 20.04 x64)
     </td>
     <td>
-      <a href="https://github.com/freshe/poddl/raw/master/bin/poddl-linux-x64.zip">Download</a>
+      <a href="https://github.com/freshe/poddl/raw/master/bin/poddl-ubuntu-x64.zip">Download</a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Linux x64 (Debian 11 x64)
+    </td>
+    <td>
+      <a href="https://github.com/freshe/poddl/raw/master/bin/poddl-debian-x64.zip">Download</a>
     </td>
   </tr>
 </table>
