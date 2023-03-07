@@ -26,31 +26,31 @@
 
 std::set<std::string> fb::HtmlCoder::get_entities(const std::string& input) {
     std::set<std::string> entities;
-    long long ampersand_pos = -1;
-    const size_t length = input.length();
+	
+	size_t const length = input.length();
+    size_t ampersand_pos = 0;
+    bool ampersand_found = false;
 
     for (size_t i = 0; i < length; i++) {
         const char c = input[i];
 
         if (c == '&') {
             ampersand_pos = i;
+            ampersand_found = true;
             continue;
         }
         
-        if (c == ';') {
-            if (ampersand_pos >= 0) {
-                const size_t entity_length = i - ampersand_pos + 1;
+        if (c == ';' && ampersand_found) {
+            const size_t entity_length = i - ampersand_pos + 1;
+			ampersand_found = false;
+            
+            if (entity_length >= 3 && entity_length <= 50) {
+                /*  Mom said this should work ok */
+                const std::string entity = input.substr(ampersand_pos, entity_length);
                 
-                if (entity_length >= 3 && entity_length <= 50) {
-                    /*  Mom said this should work ok */
-                    const std::string entity = input.substr(ampersand_pos, entity_length);
-                    
-                    if (entities.find(entity) == entities.end()) {
-                        entities.insert(entity);
-                    }
+                if (entities.find(entity) == entities.end()) {
+                    entities.insert(entity);
                 }
-
-                ampersand_pos = -1;
             }
         }
     }
@@ -79,7 +79,8 @@ std::size_t fb::HtmlCoder::get_entity_number(const std::string& entity, const bo
 
 void fb::HtmlCoder::replace(std::string& subject, const std::string& search, const std::string& replace) {
     size_t pos = 0;
-    while ((pos = subject.find(search, pos)) != std::string::npos) {
+    
+	while ((pos = subject.find(search, pos)) != std::string::npos) {
          subject.replace(pos, search.length(), replace);
          pos += replace.length();
     }
