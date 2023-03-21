@@ -114,6 +114,8 @@ Options Helper::get_options(std::vector<std::string> args) {
 			i = i + 1;
 		} else if (x == "-l") {
 			options.list_only = true;
+		} else if (x == "-s") {
+			options.short_names = true;
 		} else {
 			/* this will hopefully prevent a breaking change */
 			if (options.url.empty()) {
