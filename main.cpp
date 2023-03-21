@@ -45,6 +45,7 @@ void print_help() {
 	std::cout << "-l = Only display list of episodes" << std::endl;
 	std::cout << "-n [n] = Download a single episode" << std::endl;
 	std::cout << "-n [n-n] = Download a range of episodes" << std::endl;
+	std::cout << "-s = Store files as nnn.<ext>, where nnn counts from 1..number of files" << std::endl;
     std::cout << std::endl;
 }
 
@@ -66,6 +67,7 @@ int main(int argc, const char *argv[]) {
 	 * 	-l		List
 	 *  -n 1	Download episode 1	
 	 *	-n 1-3	Download episode 1-3
+	 *  -s          Store files as nnn.<ext>, where nnn counts from 1..number of files
 	 */
 
 	const auto args = Helper::get_args(argc, argv);
@@ -149,14 +151,21 @@ int main(int argc, const char *argv[]) {
 			continue;
 		}
 
+	auto title = item.title;
+
+	if (options.short_names == true) {
+	    // convert variable count to a string
+	    title = std::to_string(count);
+	}
+
 #ifdef _WIN32
-        std::wstring const file_path = path + L"/" + Helper::utf8_to_wide_win_string(item.title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
-        std::wstring const temp_file_path = temp_path + L"/" + Helper::utf8_to_wide_win_string(item.title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
+        std::wstring const file_path = path + L"/" + Helper::utf8_to_wide_win_string(title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
+        std::wstring const temp_file_path = temp_path + L"/" + Helper::utf8_to_wide_win_string(title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
 		std::string const print_file_path = Helper::wide_win_string_to_utf8(file_path);
 		std::string const print_temp_file_path = Helper::wide_win_string_to_utf8(temp_file_path);
 #else
-        std::string const file_path = path + "/" + item.title + "." + item.ext;
-        std::string const temp_file_path = temp_path + "/" + item.title + "." + item.ext;
+        std::string const file_path = path + "/" + title + "." + item.ext;
+        std::string const temp_file_path = temp_path + "/" + title + "." + item.ext;
 		std::string const print_file_path = file_path;
 		std::string const print_temp_file_path = temp_file_path;
 #endif
