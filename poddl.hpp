@@ -72,6 +72,7 @@ struct Podcast {
 
 struct Options {
 	bool list_only = false;
+	bool short_names = false;
 	int episode_from = -1;
 	int episode_to = -1;
 	std::string url {};

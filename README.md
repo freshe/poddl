@@ -7,7 +7,8 @@ How to use:
 Optional arguments:  
 -l = Only display list of episodes  
 -n [n] = Download a single episode  
--n [n-n] = Download a range of episodes
+-n [n-m] = Download a range of episodes
+-s = Store files as nnn.ext, where nnn counts from 1/n..m of files
 
 <h3>Precompiled binaries</h3>
 
