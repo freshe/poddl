@@ -29,7 +29,7 @@
  *  I need therapy now
  */
 
-#define VERSION "2023.02.20"
+#define VERSION "2023.03.22"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -64,10 +64,10 @@ int main(int argc, const char *argv[]) {
     print_header();
 
 	/*
-	 * 	-l		List
-	 *  -n 1	Download episode 1	
-	 *	-n 1-3	Download episode 1-3
-	 *  -s          Store files as nnn.<ext>, where nnn counts from 1/n..m
+	 *  -l      List
+	 *  -n 1    Download episode 1	
+	 *  -n 1-3  Download episode 1-3
+	 *  -s      Store files as nnn.<ext>, where nnn counts from 1/n..m
 	 */
 
 	const auto args = Helper::get_args(argc, argv);
@@ -151,11 +151,11 @@ int main(int argc, const char *argv[]) {
 			continue;
 		}
 
-	auto title = item.title;
+        auto title = item.title;
 
-	if (options.short_names == true) {
-	    title = std::to_string(item.number);
-	}
+        if (options.short_names) {
+            title = std::to_string(item.number);
+        }
 
 #ifdef _WIN32
         std::wstring const file_path = path + L"/" + Helper::utf8_to_wide_win_string(title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
