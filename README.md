@@ -7,8 +7,8 @@ How to use:
 Optional arguments:  
 -l = Only display list of episodes  
 -n [n] = Download a single episode  
--n [n-m] = Download a range of episodes
--s = Store files as nnn.ext, where nnn counts from 1/n..m of files
+-n [n-m] = Download a range of episodes  
+-s = Save episode file names as nnn.ext, where nnn is the podcast / episode number
 
 <h3>Precompiled binaries</h3>
 

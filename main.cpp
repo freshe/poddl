@@ -45,7 +45,7 @@ void print_help() {
 	std::cout << "-l = Only display list of episodes" << std::endl;
 	std::cout << "-n [n] = Download a single episode" << std::endl;
 	std::cout << "-n [n-n] = Download a range of episodes" << std::endl;
-	std::cout << "-s = Store files as nnn.<ext>, where nnn counts from 1/n..m range" << std::endl;
+	std::cout << "-s = Use episode numbers as file names (nnn.ext)" << std::endl;
     std::cout << std::endl;
 }
 
@@ -67,7 +67,7 @@ int main(int argc, const char *argv[]) {
 	 *  -l      List
 	 *  -n 1    Download episode 1	
 	 *  -n 1-3  Download episode 1-3
-	 *  -s      Store files as nnn.<ext>, where nnn counts from 1/n..m
+	 *  -s      Use episode number as file name (nnn.ext)
 	 */
 
 	const auto args = Helper::get_args(argc, argv);
