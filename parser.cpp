@@ -33,7 +33,7 @@ std::size_t const end_len = end_tag.length();
 
 std::vector<Podcast> Parser::get_items(std::string xml) {
     fb::HtmlCoder html_coder;
-    std::vector<Podcast> temp;
+    //std::vector<Podcast> temp;
 	std::vector<Podcast> output;
 
     std::regex regex_enclosure(enclosure_pattern);
@@ -65,7 +65,9 @@ std::vector<Podcast> Parser::get_items(std::string xml) {
             podcast.url = Helper::url_encode_lazy(html_coder.decode(url));
             podcast.title = Helper::clean_filename(html_coder.decode(title));
             podcast.ext = Helper::get_extension(url);
-            temp.push_back(podcast);
+            
+			output.push_back(podcast);
+			//temp.push_back(podcast);
         }
 
         start_pos = xml.find(start_tag, end_pos);
@@ -75,13 +77,20 @@ std::vector<Podcast> Parser::get_items(std::string xml) {
 	/* oldest episode first */
 	int count = 1;
 
+	//std::reverse(output.begin(), output.end());
+	for (int i = 0; i < output.size(); i++) {
+		auto item = output[i];
+		item.number = i + 1;
+	}
+
+	/*
 	for (int i = temp.size() - 1; i >= 0; i--) {
 		auto item = temp[i];
 		item.number = count;
 
 		output.push_back(item);
 		count++;
-	}
+	} */
 
     return output;
 }
