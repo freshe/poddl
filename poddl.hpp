@@ -64,7 +64,7 @@
 #endif
 
 struct Podcast {
-	int number;
+	int number = 0;
     std::string url;
     std::string title;
     std::string ext;
@@ -73,6 +73,7 @@ struct Podcast {
 struct Options {
 	bool list_only = false;
 	bool short_names = false;
+	bool newest_first = false;
 	int episode_from = -1;
 	int episode_to = -1;
 	std::string url {};
@@ -81,7 +82,7 @@ struct Options {
 
 class Parser {
 public:
-    std::vector<Podcast> get_items(std::string xml);
+    std::vector<Podcast> get_items(std::string xml, bool reverse);
 };
 
 class Helper {
@@ -89,6 +90,8 @@ public:
     template <typename T>
     static std::vector<T> slice_vector(std::vector<T> &items, int from, int to);
     
+	static std::vector<Podcast> get_subset(std::vector<Podcast> &items, int number_from, int number_to);
+
 	static Options get_options(std::vector<std::string> args);
     static std::string clean_filename(std::string input);
     static std::string url_encode_lazy(std::string input);
@@ -112,6 +115,8 @@ std::vector<T> Helper::slice_vector(std::vector<T> &items, int from, int to) {
 	if (to > items.size()) {
 		to = items.size();
 	}
+
+
 
 	auto a = items.begin() + from - 1;
 	auto b = items.begin() + to;

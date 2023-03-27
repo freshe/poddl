@@ -116,6 +116,8 @@ Options Helper::get_options(std::vector<std::string> args) {
 			options.list_only = true;
 		} else if (x == "-s") {
 			options.short_names = true;
+		} else if (x == "-r") {
+			options.newest_first = true;
 		} else {
 			/* this will hopefully prevent a breaking change */
 			if (options.url.empty()) {
@@ -135,6 +137,41 @@ void replace_substring(std::string& subject, const std::string& search, const st
          subject.replace(pos, search.length(), replace);
          pos += replace.length();
     }
+}
+
+std::vector<Podcast> Helper::get_subset(
+	std::vector<Podcast> &items, int number_from, int number_to) {
+	
+	if ( !(number_from >= 1 && number_to >= number_from) ) {
+		return std::vector<Podcast> {};
+	}
+
+	int index_from = -1;
+	int index_to = -1;
+	size_t i = 0;
+
+	/* search for subset index based on episode number */
+	for (const auto &item : items) {
+		if (item.number == number_from) {
+			index_from = i;
+		}
+		if (item.number == number_to) {
+			index_to = i;
+		}
+		i++;
+	}
+
+	if (index_from < 0 || index_to < 0) {
+		return std::vector<Podcast> {};
+	}
+
+	const size_t index_begin = std::min(index_from, index_to);
+	const size_t index_end = std::max(index_from, index_to);
+	auto a = items.begin() + index_begin;
+	auto b = items.begin() + index_end + 1;
+	std::vector<Podcast> c(a, b);
+
+	return c;
 }
 
 std::string Helper::clean_filename(std::string input) {

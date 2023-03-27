@@ -126,10 +126,12 @@ int main(int argc, const char *argv[]) {
     }
 
     const auto xml = rss_stream.str();
-    auto items = parser.get_items(xml);
+	const bool reverse = !options.newest_first;
+    auto items = parser.get_items(xml, reverse);
 
 	if (options.episode_from >= 0) {
-		auto temp = Helper::slice_vector(items, options.episode_from, options.episode_to);
+		//auto temp = Helper::slice_vector(items, options.episode_from, options.episode_to);
+		auto temp = Helper::get_subset(items, options.episode_from, options.episode_to);
 		items = temp;
 	}
 

@@ -31,7 +31,7 @@ std::string const start_tag = "<item>";
 std::string const end_tag = "</item>";
 std::size_t const end_len = end_tag.length();
 
-std::vector<Podcast> Parser::get_items(std::string xml) {
+std::vector<Podcast> Parser::get_items(std::string xml, bool reverse) {
     fb::HtmlCoder html_coder;
     //std::vector<Podcast> temp;
 	std::vector<Podcast> output;
@@ -61,7 +61,7 @@ std::vector<Podcast> Parser::get_items(std::string xml) {
         }
         
         if (!url.empty() && !title.empty()) {
-            Podcast podcast {};
+            Podcast podcast;
             podcast.url = Helper::url_encode_lazy(html_coder.decode(url));
             podcast.title = Helper::clean_filename(html_coder.decode(title));
             podcast.ext = Helper::get_extension(url);
@@ -74,23 +74,17 @@ std::vector<Podcast> Parser::get_items(std::string xml) {
         end_pos = xml.find(end_tag, start_pos);
     }
 
-	/* oldest episode first */
-	int count = 1;
-
-	//std::reverse(output.begin(), output.end());
-	for (int i = 0; i < output.size(); i++) {
-		auto item = output[i];
-		item.number = i + 1;
+	if (reverse) {
+		/* oldest episode first (default) */
+		std::reverse(output.begin(), output.end());
 	}
 
-	/*
-	for (int i = temp.size() - 1; i >= 0; i--) {
-		auto item = temp[i];
-		item.number = count;
+	const size_t size = output.size();
 
-		output.push_back(item);
-		count++;
-	} */
+	for (int i = 0; i < size; i++) {
+		auto item = &output[i];
+		item->number = (reverse ? i + 1 : size - i);
+	}
 
     return output;
 }
