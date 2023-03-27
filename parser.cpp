@@ -33,7 +33,6 @@ std::size_t const end_len = end_tag.length();
 
 std::vector<Podcast> Parser::get_items(std::string xml, bool reverse) {
     fb::HtmlCoder html_coder;
-    //std::vector<Podcast> temp;
 	std::vector<Podcast> output;
 
     std::regex regex_enclosure(enclosure_pattern);

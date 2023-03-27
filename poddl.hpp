@@ -34,6 +34,7 @@
 #include <regex>
 #include <map>
 #include <cstdlib>
+#include <cctype>
 
 #ifdef _WIN32
 #define CURL_STATICLIB
@@ -74,8 +75,10 @@ struct Options {
 	bool list_only = false;
 	bool short_names = false;
 	bool newest_first = false;
+    bool stop_when_file_found = false;
 	int episode_from = -1;
 	int episode_to = -1;
+    std::string stop_when_file_found_string {};
 	std::string url {};
 	std::string path {};
 };
@@ -87,12 +90,10 @@ public:
 
 class Helper {
 public:
-    template <typename T>
-    static std::vector<T> slice_vector(std::vector<T> &items, int from, int to);
-    
+    static void print_options(const Options &options);
+    static Options get_options(const std::vector<std::string> &args);
 	static std::vector<Podcast> get_subset(std::vector<Podcast> &items, int number_from, int number_to);
-
-	static Options get_options(std::vector<std::string> args);
+    static bool string_exists(const std::string &input, const std::string &search);
     static std::string clean_filename(std::string input);
     static std::string url_encode_lazy(std::string input);
     static std::string get_extension(std::string input);
@@ -105,26 +106,6 @@ public:
 #endif
 };
 
-template <typename T>
-std::vector<T> Helper::slice_vector(std::vector<T> &items, int from, int to) {
-	/* check range */
-	if ( !(from >= 1 && to >= from) ) {
-		return std::vector<T> {};
-	}
-
-	if (to > items.size()) {
-		to = items.size();
-	}
-
-
-
-	auto a = items.begin() + from - 1;
-	auto b = items.begin() + to;
-	auto c = std::vector<T>(a, b);
-	
-	return c;
-}
-
 class FileSystem {
 public:
 #ifdef _WIN32
@@ -136,6 +117,7 @@ public:
     static bool directory_is_empty(std::wstring path);
     static bool create_directory_if_not_exists(std::wstring path);
 #else
+    static bool is_valid_path(std::string path);
     static bool directory_exists(std::string path);
     static bool create_directory(std::string path);
     static bool delete_directory(std::string path);

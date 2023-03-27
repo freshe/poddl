@@ -42,10 +42,14 @@ void print_help() {
 
 	std::cout << std::endl;
 	std::cout << "Optional arguments:" << std::endl;
+    std::cout << "-o = Output path (needed if arguments are passed)" << std::endl;
 	std::cout << "-l = Only display list of episodes" << std::endl;
+	std::cout << "-s = Use episode numbers as file names (nnn.ext)" << std::endl;
+    std::cout << "-r = Download/List newest episodes first" << std::endl;
 	std::cout << "-n [n] = Download a single episode" << std::endl;
 	std::cout << "-n [n-n] = Download a range of episodes" << std::endl;
-	std::cout << "-s = Use episode numbers as file names (nnn.ext)" << std::endl;
+    std::cout << "-h = Quit when first existing file is found" << std::endl;
+    std::cout << "-h [text] = Quit when first existing file matches the input string" << std::endl;
     std::cout << std::endl;
 }
 
@@ -68,6 +72,9 @@ int main(int argc, const char *argv[]) {
 	 *  -n 1    Download episode 1	
 	 *  -n 1-3  Download episode 1-3
 	 *  -s      Use episode number as file name (nnn.ext)
+     *  -r      Download latest episodes first
+     *  -h      Quit program if file exists
+     *  -h abc  Quit program if episode name contains "abc"
 	 */
 
 	const auto args = Helper::get_args(argc, argv);
@@ -78,6 +85,11 @@ int main(int argc, const char *argv[]) {
 	}
 
 	const auto options = Helper::get_options(args);
+
+#ifdef DEBUG
+    Helper::print_options(options);
+    return 0;
+#endif
 
 	if (options.url.empty() || ( options.path.empty() && !options.list_only )) {
         std::cout << "Error: Invalid input";
@@ -130,7 +142,6 @@ int main(int argc, const char *argv[]) {
     auto items = parser.get_items(xml, reverse);
 
 	if (options.episode_from >= 0) {
-		//auto temp = Helper::slice_vector(items, options.episode_from, options.episode_to);
 		auto temp = Helper::get_subset(items, options.episode_from, options.episode_to);
 		items = temp;
 	}
@@ -170,9 +181,26 @@ int main(int argc, const char *argv[]) {
 		std::string const print_file_path = file_path;
 		std::string const print_temp_file_path = temp_file_path;
 #endif
+
+        if (options.stop_when_file_found) {
+            if (!options.stop_when_file_found_string.empty()) {
+                if (Helper::string_exists(title, options.stop_when_file_found_string)) {
+                    std::cout << "Found string " << options.stop_when_file_found_string << " in title " << title << std::endl;
+                    std::cout << "Exiting" << std::endl;
+
+                    break;
+                }
+            } else if (FileSystem::file_exists(file_path)) {
+                std::cout << "File exists " << print_file_path << std::endl;
+                std::cout << "Exiting" << std::endl;
+                break;
+            }
+        }
+
         if (FileSystem::file_exists(file_path)) {
             std::cout << "Skipping file " << print_file_path << std::endl;
-			count++;
+
+            count++;
             continue;
         }
 

@@ -85,15 +85,73 @@ int int_try_parse(std::string text) {
 	return 0;
 }
 
-Options Helper::get_options(std::vector<std::string> args) {
+void Helper::print_options(const Options &options) 
+{
+	std::cout << "::: OPTIONS :::" << std::endl;
+	std::cout << "url: " << options.url << std::endl;
+	std::cout << "path: " << options.path << std::endl;
+	std::cout << "list_only: " << options.list_only << std::endl;
+	std::cout << "short_names: " << options.short_names << std::endl;
+	std::cout << "newest_first: " << options.newest_first << std::endl;
+	std::cout << "episode_from: " << options.episode_from << std::endl;
+	std::cout << "episode_to: " << options.episode_to << std::endl;
+	std::cout << "stop_when_file_found -h: " << options.stop_when_file_found << std::endl;
+	std::cout << "stop_when_file_found_string -h: " << options.stop_when_file_found_string << std::endl;
+}
+
+Options Helper::get_options(const std::vector<std::string> &args) {
     fb::HtmlCoder html_coder;
 	Options options;
 
-	for (size_t i = 0; i != args.size(); i++) {
-		auto const x = args[i];
+	const size_t args_size = args.size();
+	const size_t last_i = args_size == 0 ? 0 : args_size - 1;
 
-		if (x == "-n") {
-			if ( !(i + 1 <= args.size() - 1) ) {
+	if (args_size <= 1) {
+		return options;
+	}
+
+	if (args_size == 2) {
+		options.url = url_encode_lazy(html_coder.decode(args[0]));
+		options.path = args[1];
+		return options;
+	}
+
+	options.url = url_encode_lazy(html_coder.decode(args[0]));
+
+	for (size_t i = 1; i != args.size(); i++) {
+		auto const arg = args[i];
+
+		if (arg == "-l") {
+			options.list_only = true;
+		} 
+		else if (arg == "-s") {
+			options.short_names = true;
+		}
+		else if (arg == "-r") {
+			options.newest_first = true;
+		} 
+		else if (arg == "-o") {
+			if (i + 1 > last_i) {
+				continue;
+			}
+
+			options.path = args[i + 1];
+			i = i + 1;
+		}
+		else if (arg == "-h") {
+			options.stop_when_file_found = true;
+			if (i + 1 > last_i) {
+				continue;
+			}
+
+			auto const h_argument = args[i + 1];
+			if (h_argument.length() > 0 && h_argument[0] != '-') {
+				options.stop_when_file_found_string = h_argument;
+				i = i + 1;
+ 			}
+		}
+		else if (arg == "-n") {
+			if (i + 1 > last_i) {
 				continue;
 			}
 
@@ -112,19 +170,6 @@ Options Helper::get_options(std::vector<std::string> args) {
 			}
 
 			i = i + 1;
-		} else if (x == "-l") {
-			options.list_only = true;
-		} else if (x == "-s") {
-			options.short_names = true;
-		} else if (x == "-r") {
-			options.newest_first = true;
-		} else {
-			/* this will hopefully prevent a breaking change */
-			if (options.url.empty()) {
-				options.url = url_encode_lazy(html_coder.decode(x));
-			} else {
-				options.path = x;
-			}
 		}
 	}
 
@@ -142,36 +187,58 @@ void replace_substring(std::string& subject, const std::string& search, const st
 std::vector<Podcast> Helper::get_subset(
 	std::vector<Podcast> &items, int number_from, int number_to) {
 	
-	if ( !(number_from >= 1 && number_to >= number_from) ) {
-		return std::vector<Podcast> {};
+	if (items.size() <= 1) {
+		return items;
 	}
 
-	int index_from = -1;
-	int index_to = -1;
-	size_t i = 0;
-
-	/* search for subset index based on episode number */
-	for (const auto &item : items) {
-		if (item.number == number_from) {
-			index_from = i;
-		}
-		if (item.number == number_to) {
-			index_to = i;
-		}
-		i++;
+	if (number_from > number_to) {
+		return std::vector<Podcast>{};
+	}
+	
+	if (number_from <= 0) {
+		number_from = 1;
+	}
+	
+	if (number_from > items.size()) {
+		return std::vector<Podcast>{};
 	}
 
-	if (index_from < 0 || index_to < 0) {
-		return std::vector<Podcast> {};
+	if (number_to > items.size()) {
+		number_to = items.size();
 	}
 
-	const size_t index_begin = std::min(index_from, index_to);
-	const size_t index_end = std::max(index_from, index_to);
-	auto a = items.begin() + index_begin;
-	auto b = items.begin() + index_end + 1;
+	const bool reverse = items[0].number > items[1].number;
+	
+	if (reverse) {
+		std::reverse(items.begin(), items.end());
+	}
+
+	auto a = items.begin() + number_from - 1;
+	auto b = items.begin() + number_to;
 	std::vector<Podcast> c(a, b);
 
+	if (reverse) {
+		std::reverse(c.begin(), c.end());
+	}
+
 	return c;
+}
+
+bool Helper::string_exists(const std::string &input, const std::string &search) {
+	/* todo non-ascii support : / */
+	std::string a = input;
+	std::string b = search;
+
+	std::transform(a.begin(), a.end(), a.begin(), [](unsigned char c) { 
+		return std::tolower(c); 
+	});
+	
+	std::transform(b.begin(), b.end(), b.begin(), [](unsigned char c) { 
+		return std::tolower(c); 
+	});
+
+	const size_t found = a.find(b);
+	return found != std::string::npos;
 }
 
 std::string Helper::clean_filename(std::string input) {

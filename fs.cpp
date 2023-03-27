@@ -67,6 +67,18 @@ bool FileSystem::create_directory_if_not_exists(std::wstring path) {
 
 #else
 
+bool FileSystem::is_valid_path(std::string path) {
+    int result = mkdir(path.c_str(), 0777);
+
+    if (result == 0) {
+        rmdir(path.c_str());
+        std::cout << " VALID DIRECTORY! " << std::endl;
+        return true;
+    }
+
+    return false;
+}
+
 bool FileSystem::directory_exists(std::string path) {
     struct stat st;
     return stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode);
