@@ -117,7 +117,6 @@ public:
     static bool directory_is_empty(std::wstring path);
     static bool create_directory_if_not_exists(std::wstring path);
 #else
-    static bool is_valid_path(std::string path);
     static bool directory_exists(std::string path);
     static bool create_directory(std::string path);
     static bool delete_directory(std::string path);

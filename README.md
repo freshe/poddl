@@ -1,14 +1,18 @@
 <h1>poddl - podcast downloader</h1>
-<h2>poddl is a small cross platform command line tool for downloading all, individual, or a range of podcast episodes from an RSS feed</h2>
+<h2>a cross platform command line podcast downloader for batch downloading all, individual, or a range of podcast episodes from an RSS feed</h2>
 
 How to use:  
 > $ ./poddl http://url.to.rss /OutputPath
 
 Optional arguments:  
+-o = Output path (needed if arguments are passed)  
 -l = Only display list of episodes  
--n [n] = Download a single episode  
--n [n-m] = Download a range of episodes  
--s = Save episode file names as nnn.ext, where nnn is the podcast / episode number
+-s = Use episode numbers as file names (nnn.ext)  
+-r = Download/List newest episodes first  
+-n N = Download a single episode  
+-n N-N = Download a range of episodes  
+-h = Quit when first existing file is found  
+-h "search string" = Quit when first existing file matches the input string
 
 <h3>Precompiled binaries</h3>
 

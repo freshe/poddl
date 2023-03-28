@@ -29,7 +29,7 @@
  *  I need therapy now
  */
 
-#define VERSION "2023.03.22"
+#define VERSION "2023.03.29"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -46,10 +46,10 @@ void print_help() {
 	std::cout << "-l = Only display list of episodes" << std::endl;
 	std::cout << "-s = Use episode numbers as file names (nnn.ext)" << std::endl;
     std::cout << "-r = Download/List newest episodes first" << std::endl;
-	std::cout << "-n [n] = Download a single episode" << std::endl;
-	std::cout << "-n [n-n] = Download a range of episodes" << std::endl;
+	std::cout << "-n N = Download a single episode" << std::endl;
+	std::cout << "-n N-N = Download a range of episodes" << std::endl;
     std::cout << "-h = Quit when first existing file is found" << std::endl;
-    std::cout << "-h [text] = Quit when first existing file matches the input string" << std::endl;
+    std::cout << "-h \"search string\" = Quit when first existing file matches the input string" << std::endl;
     std::cout << std::endl;
 }
 
@@ -88,7 +88,6 @@ int main(int argc, const char *argv[]) {
 
 #ifdef DEBUG
     Helper::print_options(options);
-    return 0;
 #endif
 
 	if (options.url.empty() || ( options.path.empty() && !options.list_only )) {
