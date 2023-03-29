@@ -39,17 +39,17 @@ Client::~Client() {
 
 size_t Client::curl_write(void* buffer, size_t size, size_t nmemb, void* output_ptr) {
     if (!output_ptr) {
-		return 0;
+        return 0;
     }
-	
-	std::ostream& output_stream = *static_cast<std::ostream*>(output_ptr);
-	std::streamsize length = size * nmemb;
-	
-	if (output_stream.write(static_cast<char*>(buffer), length)) {
-		return length;
-	}
+    
+    std::ostream& output_stream = *static_cast<std::ostream*>(output_ptr);
+    std::streamsize length = size * nmemb;
+    
+    if (output_stream.write(static_cast<char*>(buffer), length)) {
+        return length;
+    }
 
-	return 0;
+    return 0;
 }
 
 CURLcode Client::curl_read(const std::string& url, std::ostream& output_stream) {

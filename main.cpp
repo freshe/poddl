@@ -40,14 +40,14 @@ void print_help() {
     std::cout << "./poddl http://url.to.rss /OutputPath" << std::endl;
 #endif
 
-	std::cout << std::endl;
-	std::cout << "Optional arguments:" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Optional arguments:" << std::endl;
     std::cout << "-o = Output path (needed if arguments are passed)" << std::endl;
-	std::cout << "-l = Only display list of episodes" << std::endl;
-	std::cout << "-s = Use episode numbers as file names (nnn.ext)" << std::endl;
+    std::cout << "-l = Only display list of episodes" << std::endl;
+    std::cout << "-s = Use episode numbers as file names (nnn.ext)" << std::endl;
     std::cout << "-r = Download/List newest episodes first" << std::endl;
-	std::cout << "-n N = Download a single episode" << std::endl;
-	std::cout << "-n N-N = Download a range of episodes" << std::endl;
+    std::cout << "-n N = Download a single episode" << std::endl;
+    std::cout << "-n N-N = Download a range of episodes" << std::endl;
     std::cout << "-h = Quit when first existing file is found" << std::endl;
     std::cout << "-h \"search string\" = Quit when first existing file matches the input string" << std::endl;
     std::cout << std::endl;
@@ -61,71 +61,71 @@ void print_header() {
 
 #ifdef _WIN32
 int wmain(int argc, const wchar_t *argv[]) {
-	SetConsoleOutputCP(CP_UTF8);
+    SetConsoleOutputCP(CP_UTF8);
 #else
 int main(int argc, const char *argv[]) {
 #endif
     print_header();
 
-	/*
-	 *  -l      List
-	 *  -n 1    Download episode 1	
-	 *  -n 1-3  Download episode 1-3
-	 *  -s      Use episode number as file name (nnn.ext)
+    /*
+     *  -l      List
+     *  -n 1    Download episode 1	
+     *  -n 1-3  Download episode 1-3
+     *  -s      Use episode number as file name (nnn.ext)
      *  -r      Download latest episodes first
      *  -h      Quit program if file exists
      *  -h abc  Quit program if episode name contains "abc"
-	 */
+     */
 
-	const auto args = Helper::get_args(argc, argv);
+    const auto args = Helper::get_args(argc, argv);
 
-	if (args.size() == 0) {
-		print_help();
+    if (args.size() == 0) {
+        print_help();
         return -1;
-	}
+    }
 
-	const auto options = Helper::get_options(args);
+    const auto options = Helper::get_options(args);
 
 #ifdef DEBUG
     Helper::print_options(options);
 #endif
 
-	if (options.url.empty() || ( options.path.empty() && !options.list_only )) {
+    if (options.url.empty() || ( options.path.empty() && !options.list_only )) {
         std::cout << "Error: Invalid input";
         std::cout << std::endl;
         std::cout << std::endl;
         print_help();
         return -1;
-	}
+    }
 
-	std::string const url = options.url;
+    std::string const url = options.url;
 
 #ifdef _WIN32
-	std::wstring const path = Helper::utf8_to_wide_win_string(options.path);
+    std::wstring const path = Helper::utf8_to_wide_win_string(options.path);
     std::wstring const temp_path = path + L"/tmp";
-	std::string const print_path = Helper::wide_win_string_to_utf8(path);
-	std::string const print_temp_path = Helper::wide_win_string_to_utf8(temp_path);
+    std::string const print_path = Helper::wide_win_string_to_utf8(path);
+    std::string const print_temp_path = Helper::wide_win_string_to_utf8(temp_path);
 #else
-	std::string const path = options.path;
+    std::string const path = options.path;
     std::string const temp_path = path + "/tmp";
-	std::string const print_path = path;
-	std::string const print_temp_path = temp_path;
+    std::string const print_path = path;
+    std::string const print_temp_path = temp_path;
 #endif
     std::ostringstream rss_stream;
 
-	if (!options.list_only) {
-		if (!FileSystem::create_directory_if_not_exists(path)) {
-			std::cout << "Error: Could not create directory " << print_path << std::endl;
-			return -1;
-		}
+    if (!options.list_only) {
+        if (!FileSystem::create_directory_if_not_exists(path)) {
+            std::cout << "Error: Could not create directory " << print_path << std::endl;
+            return -1;
+        }
 
-		if (!FileSystem::create_directory_if_not_exists(temp_path)) {
-			std::cout << "Error: Could not create temp directory " << print_temp_path << std::endl;
-			return -1;
-		}
-	}
+        if (!FileSystem::create_directory_if_not_exists(temp_path)) {
+            std::cout << "Error: Could not create temp directory " << print_temp_path << std::endl;
+            return -1;
+        }
+    }
 
- 	Client client;
+    Client client;
     Parser parser;
 
     std::cout << "Fetching URL: " << url << std::endl;
@@ -137,13 +137,13 @@ int main(int argc, const char *argv[]) {
     }
 
     const auto xml = rss_stream.str();
-	const bool reverse = !options.newest_first;
+    const bool reverse = !options.newest_first;
     auto items = parser.get_items(xml, reverse);
 
-	if (options.episode_from >= 0) {
-		auto temp = Helper::get_subset(items, options.episode_from, options.episode_to);
-		items = temp;
-	}
+    if (options.episode_from >= 0) {
+        auto temp = Helper::get_subset(items, options.episode_from, options.episode_to);
+        items = temp;
+    }
 
     auto size = items.size();
     auto success = size > 0;
@@ -157,11 +157,11 @@ int main(int argc, const char *argv[]) {
     int count = 1;
 
     for (auto const& item : items) {
-		if (options.list_only) {
-			std::cout << "[" << item.number << "]" << " " << item.title << std::endl;
-			count++;
-			continue;
-		}
+        if (options.list_only) {
+            std::cout << "[" << item.number << "]" << " " << item.title << std::endl;
+            count++;
+            continue;
+        }
 
         auto title = item.title;
 
@@ -172,13 +172,13 @@ int main(int argc, const char *argv[]) {
 #ifdef _WIN32
         std::wstring const file_path = path + L"/" + Helper::utf8_to_wide_win_string(title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
         std::wstring const temp_file_path = temp_path + L"/" + Helper::utf8_to_wide_win_string(title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
-		std::string const print_file_path = Helper::wide_win_string_to_utf8(file_path);
-		std::string const print_temp_file_path = Helper::wide_win_string_to_utf8(temp_file_path);
+        std::string const print_file_path = Helper::wide_win_string_to_utf8(file_path);
+        std::string const print_temp_file_path = Helper::wide_win_string_to_utf8(temp_file_path);
 #else
         std::string const file_path = path + "/" + title + "." + item.ext;
         std::string const temp_file_path = temp_path + "/" + title + "." + item.ext;
-		std::string const print_file_path = file_path;
-		std::string const print_temp_file_path = temp_file_path;
+        std::string const print_file_path = file_path;
+        std::string const print_temp_file_path = temp_file_path;
 #endif
 
         if (options.stop_when_file_found) {

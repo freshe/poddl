@@ -26,19 +26,19 @@
 #include "html_coder.hpp"
 
 /*
-	/ \ * ? | <> : "
+    / \ * ? | <> : "
 */
 const std::map<std::string, std::string> bad_filename_characters
 {
-	{"<", ""},
-	{">", ""},
-	{"|", ""},
-	{"?", ""},
-	{"*", ""},
+    {"<", ""},
+    {">", ""},
+    {"|", ""},
+    {"?", ""},
+    {"*", ""},
     {":", ""},
     {"/", ""},
     {"\\", ""},
-	{"\"", ""}
+    {"\"", ""}
 };
 
 const std::string media_extensions[] =
@@ -49,131 +49,131 @@ const std::string media_extensions[] =
 
 #ifdef _WIN32
 std::vector<std::string> Helper::get_args(int argc, const wchar_t *argv[]) {
-	std::vector<std::string> v;
-	
-	for (int i = 1; i < argc; i++) {
-		const wchar_t *arg = argv[i];
-		const std::wstring wstr(arg);
-		const std::string str = Helper::wide_win_string_to_utf8(wstr);
-		v.push_back(str);
-	}
+    std::vector<std::string> v;
+    
+    for (int i = 1; i < argc; i++) {
+        const wchar_t *arg = argv[i];
+        const std::wstring wstr(arg);
+        const std::string str = Helper::wide_win_string_to_utf8(wstr);
+        v.push_back(str);
+    }
 
-	return v;
+    return v;
 }
 #else
 std::vector<std::string> Helper::get_args(int argc, const char *argv[]) {
-	std::vector<std::string> v;
-	
-	for (int i = 1; i < argc; i++) {
-		const char *arg = argv[i];
-		const std::string str(arg);
-		v.push_back(str);
-	}
+    std::vector<std::string> v;
+    
+    for (int i = 1; i < argc; i++) {
+        const char *arg = argv[i];
+        const std::string str(arg);
+        v.push_back(str);
+    }
 
-	return v;
+    return v;
 }
 #endif
 
 int int_try_parse(std::string text) {
-	char* endptr;
-	int number = strtol(text.c_str(), &endptr, 10);
+    char* endptr;
+    int number = strtol(text.c_str(), &endptr, 10);
 
-	if (endptr == text.c_str() + text.size()) {
-		return number;
-	}
+    if (endptr == text.c_str() + text.size()) {
+        return number;
+    }
 
-	return 0;
+    return 0;
 }
 
 void Helper::print_options(const Options &options) 
 {
-	std::cout << "::: OPTIONS :::" << std::endl;
-	std::cout << "url: " << options.url << std::endl;
-	std::cout << "path: " << options.path << std::endl;
-	std::cout << "list_only: " << options.list_only << std::endl;
-	std::cout << "short_names: " << options.short_names << std::endl;
-	std::cout << "newest_first: " << options.newest_first << std::endl;
-	std::cout << "episode_from: " << options.episode_from << std::endl;
-	std::cout << "episode_to: " << options.episode_to << std::endl;
-	std::cout << "stop_when_file_found -h: " << options.stop_when_file_found << std::endl;
-	std::cout << "stop_when_file_found_string -h: " << options.stop_when_file_found_string << std::endl;
+    std::cout << "::: OPTIONS :::" << std::endl;
+    std::cout << "url: " << options.url << std::endl;
+    std::cout << "path: " << options.path << std::endl;
+    std::cout << "list_only: " << options.list_only << std::endl;
+    std::cout << "short_names: " << options.short_names << std::endl;
+    std::cout << "newest_first: " << options.newest_first << std::endl;
+    std::cout << "episode_from: " << options.episode_from << std::endl;
+    std::cout << "episode_to: " << options.episode_to << std::endl;
+    std::cout << "stop_when_file_found -h: " << options.stop_when_file_found << std::endl;
+    std::cout << "stop_when_file_found_string -h: " << options.stop_when_file_found_string << std::endl;
 }
 
 Options Helper::get_options(const std::vector<std::string> &args) {
     fb::HtmlCoder html_coder;
-	Options options;
+    Options options;
 
-	const size_t args_size = args.size();
-	const size_t last_i = args_size == 0 ? 0 : args_size - 1;
+    const size_t args_size = args.size();
+    const size_t last_i = args_size == 0 ? 0 : args_size - 1;
 
-	if (args_size <= 1) {
-		return options;
-	}
+    if (args_size <= 1) {
+        return options;
+    }
 
-	if (args_size == 2 && args[1][0] != '-') {
-		options.url = url_encode_lazy(html_coder.decode(args[0]));
-		options.path = args[1];
-		return options;
-	}
+    if (args_size == 2 && args[1][0] != '-') {
+        options.url = url_encode_lazy(html_coder.decode(args[0]));
+        options.path = args[1];
+        return options;
+    }
 
-	options.url = url_encode_lazy(html_coder.decode(args[0]));
+    options.url = url_encode_lazy(html_coder.decode(args[0]));
 
-	for (size_t i = 1; i != args.size(); i++) {
-		auto const arg = args[i];
+    for (size_t i = 1; i != args.size(); i++) {
+        auto const arg = args[i];
 
-		if (arg == "-l") {
-			options.list_only = true;
-		} 
-		else if (arg == "-s") {
-			options.short_names = true;
-		}
-		else if (arg == "-r") {
-			options.newest_first = true;
-		} 
-		else if (arg == "-o") {
-			if (i + 1 > last_i) {
-				continue;
-			}
+        if (arg == "-l") {
+            options.list_only = true;
+        } 
+        else if (arg == "-s") {
+            options.short_names = true;
+        }
+        else if (arg == "-r") {
+            options.newest_first = true;
+        } 
+        else if (arg == "-o") {
+            if (i + 1 > last_i) {
+                continue;
+            }
 
-			options.path = args[i + 1];
-			i = i + 1;
-		}
-		else if (arg == "-h") {
-			options.stop_when_file_found = true;
-			if (i + 1 > last_i) {
-				continue;
-			}
+            options.path = args[i + 1];
+            i = i + 1;
+        }
+        else if (arg == "-h") {
+            options.stop_when_file_found = true;
+            if (i + 1 > last_i) {
+                continue;
+            }
 
-			auto const h_argument = args[i + 1];
-			if (h_argument.length() > 0 && h_argument[0] != '-') {
-				options.stop_when_file_found_string = h_argument;
-				i = i + 1;
- 			}
-		}
-		else if (arg == "-n") {
-			if (i + 1 > last_i) {
-				continue;
-			}
+            auto const h_argument = args[i + 1];
+            if (h_argument.length() > 0 && h_argument[0] != '-') {
+                options.stop_when_file_found_string = h_argument;
+                i = i + 1;
+             }
+        }
+        else if (arg == "-n") {
+            if (i + 1 > last_i) {
+                continue;
+            }
 
-			auto const n = args[i + 1];
-			auto const d = n.find("-");
+            auto const n = args[i + 1];
+            auto const d = n.find("-");
 
-			if (d != std::string::npos) {
-				auto const a = n.substr(0, d);
-				auto const b = n.substr(d + 1);
+            if (d != std::string::npos) {
+                auto const a = n.substr(0, d);
+                auto const b = n.substr(d + 1);
 
-				options.episode_from = int_try_parse(a);
-				options.episode_to = int_try_parse(b);
-			} else {
-				options.episode_from = int_try_parse(n);
-				options.episode_to = options.episode_from;
-			}
+                options.episode_from = int_try_parse(a);
+                options.episode_to = int_try_parse(b);
+            } else {
+                options.episode_from = int_try_parse(n);
+                options.episode_to = options.episode_from;
+            }
 
-			i = i + 1;
-		}
-	}
+            i = i + 1;
+        }
+    }
 
-	return options;
+    return options;
 }
 
 void replace_substring(std::string& subject, const std::string& search, const std::string& replace) {
@@ -185,60 +185,60 @@ void replace_substring(std::string& subject, const std::string& search, const st
 }
 
 std::vector<Podcast> Helper::get_subset(
-	std::vector<Podcast> &items, int number_from, int number_to) {
-	
-	if (items.size() <= 1) {
-		return items;
-	}
+    std::vector<Podcast> &items, int number_from, int number_to) {
+    
+    if (items.size() <= 1) {
+        return items;
+    }
 
-	if (number_from > number_to) {
-		return std::vector<Podcast>{};
-	}
-	
-	if (number_from <= 0) {
-		number_from = 1;
-	}
-	
-	if (number_from > items.size()) {
-		return std::vector<Podcast>{};
-	}
+    if (number_from > number_to) {
+        return std::vector<Podcast>{};
+    }
+    
+    if (number_from <= 0) {
+        number_from = 1;
+    }
+    
+    if (number_from > items.size()) {
+        return std::vector<Podcast>{};
+    }
 
-	if (number_to > items.size()) {
-		number_to = items.size();
-	}
+    if (number_to > items.size()) {
+        number_to = items.size();
+    }
 
-	const bool reverse = items[0].number > items[1].number;
-	
-	if (reverse) {
-		std::reverse(items.begin(), items.end());
-	}
+    const bool reverse = items[0].number > items[1].number;
+    
+    if (reverse) {
+        std::reverse(items.begin(), items.end());
+    }
 
-	auto a = items.begin() + number_from - 1;
-	auto b = items.begin() + number_to;
-	std::vector<Podcast> c(a, b);
+    auto a = items.begin() + number_from - 1;
+    auto b = items.begin() + number_to;
+    std::vector<Podcast> c(a, b);
 
-	if (reverse) {
-		std::reverse(c.begin(), c.end());
-	}
+    if (reverse) {
+        std::reverse(c.begin(), c.end());
+    }
 
-	return c;
+    return c;
 }
 
 bool Helper::string_exists(const std::string &input, const std::string &search) {
-	/* todo non-ascii support : / */
-	std::string a = input;
-	std::string b = search;
+    /* todo non-ascii support : / */
+    std::string a = input;
+    std::string b = search;
 
-	std::transform(a.begin(), a.end(), a.begin(), [](unsigned char c) { 
-		return std::tolower(c); 
-	});
-	
-	std::transform(b.begin(), b.end(), b.begin(), [](unsigned char c) { 
-		return std::tolower(c); 
-	});
+    std::transform(a.begin(), a.end(), a.begin(), [](unsigned char c) { 
+        return std::tolower(c); 
+    });
+    
+    std::transform(b.begin(), b.end(), b.begin(), [](unsigned char c) { 
+        return std::tolower(c); 
+    });
 
-	const size_t found = a.find(b);
-	return found != std::string::npos;
+    const size_t found = a.find(b);
+    return found != std::string::npos;
 }
 
 std::string Helper::clean_filename(std::string input) {

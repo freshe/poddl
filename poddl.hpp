@@ -65,22 +65,22 @@
 #endif
 
 struct Podcast {
-	int number = 0;
+    int number = 0;
     std::string url;
     std::string title;
     std::string ext;
 };
 
 struct Options {
-	bool list_only = false;
-	bool short_names = false;
-	bool newest_first = false;
+    bool list_only = false;
+    bool short_names = false;
+    bool newest_first = false;
     bool stop_when_file_found = false;
-	int episode_from = -1;
-	int episode_to = -1;
+    int episode_from = -1;
+    int episode_to = -1;
     std::string stop_when_file_found_string {};
-	std::string url {};
-	std::string path {};
+    std::string url {};
+    std::string path {};
 };
 
 class Parser {
@@ -92,7 +92,7 @@ class Helper {
 public:
     static void print_options(const Options &options);
     static Options get_options(const std::vector<std::string> &args);
-	static std::vector<Podcast> get_subset(std::vector<Podcast> &items, int number_from, int number_to);
+    static std::vector<Podcast> get_subset(std::vector<Podcast> &items, int number_from, int number_to);
     static bool string_exists(const std::string &input, const std::string &search);
     static std::string clean_filename(std::string input);
     static std::string url_encode_lazy(std::string input);
@@ -100,9 +100,9 @@ public:
 #ifdef _WIN32
     static std::wstring utf8_to_wide_win_string(std::string input);
     static std::string wide_win_string_to_utf8(std::wstring input);
-	static std::vector<std::string> get_args(int argc, const wchar_t *argv[]);
+    static std::vector<std::string> get_args(int argc, const wchar_t *argv[]);
 #else
-	static std::vector<std::string> get_args(int argc, const char *argv[]);
+    static std::vector<std::string> get_args(int argc, const char *argv[]);
 #endif
 };
 

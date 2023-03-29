@@ -26,8 +26,8 @@
 
 std::set<std::string> fb::HtmlCoder::get_entities(const std::string& input) {
     std::set<std::string> entities;
-	
-	size_t const length = input.length();
+    
+    size_t const length = input.length();
     size_t ampersand_pos = 0;
     bool ampersand_found = false;
 
@@ -42,7 +42,7 @@ std::set<std::string> fb::HtmlCoder::get_entities(const std::string& input) {
         
         if (c == ';' && ampersand_found) {
             const size_t entity_length = i - ampersand_pos + 1;
-			ampersand_found = false;
+            ampersand_found = false;
             
             if (entity_length >= 3 && entity_length <= 50) {
                 /*  Mom said this should work ok */
@@ -80,7 +80,7 @@ std::size_t fb::HtmlCoder::get_entity_number(const std::string& entity, const bo
 void fb::HtmlCoder::replace(std::string& subject, const std::string& search, const std::string& replace) {
     size_t pos = 0;
     
-	while ((pos = subject.find(search, pos)) != std::string::npos) {
+    while ((pos = subject.find(search, pos)) != std::string::npos) {
          subject.replace(pos, search.length(), replace);
          pos += replace.length();
     }

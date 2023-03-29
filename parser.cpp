@@ -33,7 +33,7 @@ std::size_t const end_len = end_tag.length();
 
 std::vector<Podcast> Parser::get_items(std::string xml, bool reverse) {
     fb::HtmlCoder html_coder;
-	std::vector<Podcast> output;
+    std::vector<Podcast> output;
 
     std::regex regex_enclosure(enclosure_pattern);
     std::regex regex_title(title_pattern);
@@ -65,25 +65,25 @@ std::vector<Podcast> Parser::get_items(std::string xml, bool reverse) {
             podcast.title = Helper::clean_filename(html_coder.decode(title));
             podcast.ext = Helper::get_extension(url);
             
-			output.push_back(podcast);
-			//temp.push_back(podcast);
+            output.push_back(podcast);
+            //temp.push_back(podcast);
         }
 
         start_pos = xml.find(start_tag, end_pos);
         end_pos = xml.find(end_tag, start_pos);
     }
 
-	if (reverse) {
-		/* oldest episode first (default) */
-		std::reverse(output.begin(), output.end());
-	}
+    if (reverse) {
+        /* oldest episode first (default) */
+        std::reverse(output.begin(), output.end());
+    }
 
-	const size_t size = output.size();
+    const size_t size = output.size();
 
-	for (int i = 0; i < size; i++) {
-		auto item = &output[i];
-		item->number = (reverse ? i + 1 : size - i);
-	}
+    for (int i = 0; i < size; i++) {
+        auto item = &output[i];
+        item->number = (reverse ? i + 1 : size - i);
+    }
 
     return output;
 }
