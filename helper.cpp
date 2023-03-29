@@ -110,7 +110,7 @@ Options Helper::get_options(const std::vector<std::string> &args) {
 		return options;
 	}
 
-	if (args_size == 2) {
+	if (args_size == 2 && args[1][0] != '-') {
 		options.url = url_encode_lazy(html_coder.decode(args[0]));
 		options.path = args[1];
 		return options;
