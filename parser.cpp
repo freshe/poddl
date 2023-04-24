@@ -27,6 +27,8 @@
 
 std::string const enclosure_pattern = "<enclosure.*?url=[\"|'](.+?)[\"|'].*?>";
 std::string const title_pattern = "<title>(.+?)</title>";
+std::string const cdata_pattern = "<\\!\\[CDATA\\[(.+?)\\]\\]>";
+
 std::string const start_tag = "<item>";
 std::string const end_tag = "</item>";
 std::size_t const end_len = end_tag.length();
@@ -37,6 +39,7 @@ std::vector<Podcast> Parser::get_items(std::string xml, bool reverse) {
 
     std::regex regex_enclosure(enclosure_pattern);
     std::regex regex_title(title_pattern);
+    std::regex regex_cdata(cdata_pattern);
 
     auto start_pos = xml.find(start_tag);
     auto end_pos = xml.find(end_tag);
@@ -48,6 +51,7 @@ std::vector<Podcast> Parser::get_items(std::string xml, bool reverse) {
         std::string url, title, ext;
         std::smatch match_enclosure;
         std::smatch match_title;
+        std::smatch match_cdata;
         
         //URL
         if (std::regex_search(item, match_enclosure, regex_enclosure)) {
@@ -61,12 +65,16 @@ std::vector<Podcast> Parser::get_items(std::string xml, bool reverse) {
         
         if (!url.empty() && !title.empty()) {
             Podcast podcast;
+
+            if (std::regex_search(title, match_cdata, regex_cdata)) {
+                title = match_cdata.str(1);
+            }
+
             podcast.url = Helper::url_encode_lazy(html_coder.decode(url));
             podcast.title = Helper::clean_filename(html_coder.decode(title));
             podcast.ext = Helper::get_extension(url);
             
             output.push_back(podcast);
-            //temp.push_back(podcast);
         }
 
         start_pos = xml.find(start_tag, end_pos);
