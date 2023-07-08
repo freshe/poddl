@@ -74,6 +74,7 @@ struct Podcast {
 struct Options {
     bool list_only = false;
     bool short_names = false;
+    bool append_nums = false;
     bool newest_first = false;
     bool stop_when_file_found = false;
     int episode_from = -1;

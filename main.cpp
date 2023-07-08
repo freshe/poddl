@@ -45,6 +45,7 @@ void print_help() {
     std::cout << "-o = Output path (needed if arguments are passed)" << std::endl;
     std::cout << "-l = Only display list of episodes" << std::endl;
     std::cout << "-s = Use episode numbers as file names (nnn.ext)" << std::endl;
+    std::cout << "-a = Append episode number to beginning of file names" << std::endl;
     std::cout << "-r = Download/List newest episodes first" << std::endl;
     std::cout << "-n N = Download a single episode" << std::endl;
     std::cout << "-n N-N = Download a range of episodes" << std::endl;
@@ -72,6 +73,7 @@ int main(int argc, const char *argv[]) {
      *  -n 1    Download episode 1	
      *  -n 1-3  Download episode 1-3
      *  -s      Use episode number as file name (nnn.ext)
+     *  -a      Append episode number to beginning of file names
      *  -r      Download latest episodes first
      *  -h      Quit program if file exists
      *  -h abc  Quit program if episode name contains "abc"
@@ -164,6 +166,10 @@ int main(int argc, const char *argv[]) {
         }
 
         auto title = item.title;
+
+        if (options.append_nums) {
+            title = "[" + std::to_string(item.number) + "] " + title;
+        }
 
         if (options.short_names) {
             title = std::to_string(item.number);

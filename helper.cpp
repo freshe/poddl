@@ -127,6 +127,9 @@ Options Helper::get_options(const std::vector<std::string> &args) {
         else if (arg == "-s") {
             options.short_names = true;
         }
+        else if (arg == "-a") {
+            options.append_nums = true;
+        }
         else if (arg == "-r") {
             options.newest_first = true;
         } 
