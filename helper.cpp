@@ -92,6 +92,7 @@ void Helper::print_options(const Options &options)
     std::cout << "path: " << options.path << std::endl;
     std::cout << "list_only: " << options.list_only << std::endl;
     std::cout << "short_names: " << options.short_names << std::endl;
+    std::cout << "append_nums: " << options.append_nums << std::endl;
     std::cout << "newest_first: " << options.newest_first << std::endl;
     std::cout << "episode_from: " << options.episode_from << std::endl;
     std::cout << "episode_to: " << options.episode_to << std::endl;
