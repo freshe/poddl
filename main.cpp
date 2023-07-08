@@ -43,8 +43,8 @@ void print_help() {
     std::cout << std::endl;
     std::cout << "Optional arguments:" << std::endl;
     std::cout << "-o = Output path (needed if arguments are passed)" << std::endl;
-    std::cout << "-i = Add episode index/number to file names" << std::endl;
     std::cout << "-l = Only display list of episodes" << std::endl;
+    std::cout << "-i = Add episode index/number to file names" << std::endl;
     std::cout << "-s = Use episode index/number as file names (nnn.ext)" << std::endl;
     std::cout << "-r = Download/List newest episodes first" << std::endl;
     std::cout << "-n N = Download a single episode" << std::endl;
@@ -67,16 +67,6 @@ int wmain(int argc, const wchar_t *argv[]) {
 int main(int argc, const char *argv[]) {
 #endif
     print_header();
-
-    /*
-     *  -l      List
-     *  -n 1    Download episode 1	
-     *  -n 1-3  Download episode 1-3
-     *  -s      Use episode number as file name (nnn.ext)
-     *  -r      Download latest episodes first
-     *  -h      Quit program if file exists
-     *  -h abc  Quit program if episode name contains "abc"
-     */
 
     const auto args = Helper::get_args(argc, argv);
 
