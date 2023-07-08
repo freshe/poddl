@@ -90,6 +90,7 @@ void Helper::print_options(const Options &options)
     std::cout << "::: OPTIONS :::" << std::endl;
     std::cout << "url: " << options.url << std::endl;
     std::cout << "path: " << options.path << std::endl;
+    std::cout << "add index/number: " << options.append_episode_nr << std::endl;
     std::cout << "list_only: " << options.list_only << std::endl;
     std::cout << "short_names: " << options.short_names << std::endl;
     std::cout << "newest_first: " << options.newest_first << std::endl;
@@ -129,7 +130,10 @@ Options Helper::get_options(const std::vector<std::string> &args) {
         }
         else if (arg == "-r") {
             options.newest_first = true;
-        } 
+        }
+        else if (arg == "-i") {
+            options.append_episode_nr = true;
+        }
         else if (arg == "-o") {
             if (i + 1 > last_i) {
                 continue;

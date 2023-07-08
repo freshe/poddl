@@ -29,7 +29,7 @@
  *  I need therapy now
  */
 
-#define VERSION "2023.04.24"
+#define VERSION "2023.07.08"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -43,8 +43,9 @@ void print_help() {
     std::cout << std::endl;
     std::cout << "Optional arguments:" << std::endl;
     std::cout << "-o = Output path (needed if arguments are passed)" << std::endl;
+    std::cout << "-i = Add episode index/number to file names" << std::endl;
     std::cout << "-l = Only display list of episodes" << std::endl;
-    std::cout << "-s = Use episode numbers as file names (nnn.ext)" << std::endl;
+    std::cout << "-s = Use episode index/number as file names (nnn.ext)" << std::endl;
     std::cout << "-r = Download/List newest episodes first" << std::endl;
     std::cout << "-n N = Download a single episode" << std::endl;
     std::cout << "-n N-N = Download a range of episodes" << std::endl;
@@ -167,6 +168,8 @@ int main(int argc, const char *argv[]) {
 
         if (options.short_names) {
             title = std::to_string(item.number);
+        } else if (options.append_episode_nr) {
+            title = std::to_string(item.number) + ". " + item.title;
         }
 
 #ifdef _WIN32

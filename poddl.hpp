@@ -76,6 +76,7 @@ struct Options {
     bool short_names = false;
     bool newest_first = false;
     bool stop_when_file_found = false;
+    bool append_episode_nr = false;
     int episode_from = -1;
     int episode_to = -1;
     std::string stop_when_file_found_string {};
