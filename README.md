@@ -7,8 +7,8 @@ How to use:
 Optional arguments:  
 -o = Output path (needed if arguments are passed)  
 -l = Only display list of episodes  
--i = Add episode index / number to file names  
--s = Use episode index/number as file names (nnn.ext)  
+-i = Add episode index / number to file names   
+-s = Use episode index / number as file names (nnn.ext)  
 -r = Download/List newest episodes first  
 -n N = Download a single episode  
 -n N-N = Download a range of episodes  
