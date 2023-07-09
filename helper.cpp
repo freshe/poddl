@@ -85,13 +85,13 @@ int int_try_parse(std::string text) {
     return 0;
 }
 
-void Helper::print_options(const Options &options) 
+void Helper::debug_print_options(const Options &options) 
 {
     std::cout << "::: OPTIONS :::" << std::endl;
     std::cout << "url: " << options.url << std::endl;
     std::cout << "path: " << options.path << std::endl;
-    std::cout << "add index/number: " << options.append_episode_nr << std::endl;
     std::cout << "list_only: " << options.list_only << std::endl;
+    std::cout << "append_episode_nr: " << options.append_episode_nr << std::endl;
     std::cout << "short_names: " << options.short_names << std::endl;
     std::cout << "newest_first: " << options.newest_first << std::endl;
     std::cout << "episode_from: " << options.episode_from << std::endl;

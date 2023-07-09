@@ -91,7 +91,7 @@ public:
 
 class Helper {
 public:
-    static void print_options(const Options &options);
+    static void debug_print_options(const Options &options);
     static Options get_options(const std::vector<std::string> &args);
     static std::vector<Podcast> get_subset(std::vector<Podcast> &items, int number_from, int number_to);
     static bool string_exists(const std::string &input, const std::string &search);

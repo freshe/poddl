@@ -78,7 +78,7 @@ int main(int argc, const char *argv[]) {
     const auto options = Helper::get_options(args);
 
 #ifdef DEBUG
-    Helper::print_options(options);
+    Helper::debug_print_options(options);
 #endif
 
     if (options.url.empty() || ( options.path.empty() && !options.list_only )) {
