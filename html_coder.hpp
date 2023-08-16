@@ -27,7 +27,7 @@
 #include <locale>
 #include <string>
 #include <set>
-#include <map>
+#include <unordered_map>
 #include <stdlib.h>
 
 namespace fb {
@@ -41,7 +41,7 @@ namespace fb {
         std::string decode_entity(const size_t& number);
         void replace(std::string& subject, const std::string& search, const std::string& replace);
 
-        const std::map<std::string, std::string> named_html_entities
+        const std::unordered_map<std::string, std::string> named_html_entities
         /* https://html.spec.whatwg.org/multipage/named-characters.html */
         {
             { "&Aacute;", "Á"},
