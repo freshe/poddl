@@ -10,7 +10,7 @@ Optional arguments:
 -r = Download/List newest episodes first  
 -i = Add episode index / number to file names   
 -s = Use episode index / number as file names (nnn.ext)  
--z N = Zero pad index/number when -i or -s are used (default = 3 if N are left out)  
+-z N = Zero pad episode index / number when -i or -s are used (default = 3 if N are left out)  
 -n N = Download a single episode  
 -n N-N = Download a range of episodes  
 -h = Quit when first existing file is found  
