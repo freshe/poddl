@@ -24,6 +24,8 @@
 
 #include "poddl.hpp"
 #include "html_coder.hpp"
+#include <iostream>
+#include <iomanip>
 
 /*
     / \ * ? | <> : "
@@ -83,6 +85,13 @@ int int_try_parse(std::string text) {
     }
 
     return 0;
+}
+
+std::string Helper::zero_pad(const int value, const unsigned total_len)
+{
+     std::ostringstream oss;
+     oss << std::setw(total_len) << std::setfill('0') << value;
+     return oss.str();
 }
 
 void Helper::debug_print_options(const Options &options) 

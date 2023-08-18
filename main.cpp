@@ -155,11 +155,12 @@ int main(int argc, const char *argv[]) {
         }
 
         auto title = item.title;
-
+        
+        std::string number_str = Helper::zero_pad(item.number, std::to_string(size).length());
         if (options.short_names) {
-            title = std::to_string(item.number);
+            title = number_str;
         } else if (options.append_episode_nr) {
-            title = std::to_string(item.number) + ". " + item.title;
+            title = number_str + ". " + item.title;
         }
 
 #ifdef _WIN32
