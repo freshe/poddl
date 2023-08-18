@@ -35,8 +35,10 @@
 #include <map>
 #include <cstdlib>
 #include <cctype>
+#include <limits>
 
 #ifdef _WIN32
+#define NOMINMAX
 #define CURL_STATICLIB
 #include <windows.h>
 #include <shlwapi.h>
@@ -77,6 +79,7 @@ struct Options {
     bool newest_first = false;
     bool stop_when_file_found = false;
     bool append_episode_nr = false;
+    size_t zero_padded_episode_nr = 0;
     int episode_from = -1;
     int episode_to = -1;
     std::string stop_when_file_found_string {};
@@ -98,6 +101,7 @@ public:
     static std::string clean_filename(std::string input);
     static std::string url_encode_lazy(std::string input);
     static std::string get_extension(std::string input);
+    static std::string get_zero_padded_number_string(const size_t number, const size_t leading_zeros);
 #ifdef _WIN32
     static std::wstring utf8_to_wide_win_string(std::string input);
     static std::string wide_win_string_to_utf8(std::wstring input);

@@ -93,6 +93,7 @@ void Helper::debug_print_options(const Options &options)
     std::cout << "list_only: " << options.list_only << std::endl;
     std::cout << "append_episode_nr: " << options.append_episode_nr << std::endl;
     std::cout << "short_names: " << options.short_names << std::endl;
+    std::cout << "zero_padded_episode_nr: " << options.zero_padded_episode_nr << std::endl;
     std::cout << "newest_first: " << options.newest_first << std::endl;
     std::cout << "episode_from: " << options.episode_from << std::endl;
     std::cout << "episode_to: " << options.episode_to << std::endl;
@@ -134,6 +135,24 @@ Options Helper::get_options(const std::vector<std::string> &args) {
         else if (arg == "-i") {
             options.append_episode_nr = true;
         }
+        else if (arg == "-z") {
+            options.zero_padded_episode_nr = 3;
+          
+            if (i + 1 > last_i) {
+                continue;
+            }
+
+            auto const z_argument = args[i + 1];
+
+            if (z_argument.length() > 0 && z_argument[0] != '-') {
+                const auto z_number = int_try_parse(z_argument);
+                if (z_number > 0) {
+                    options.zero_padded_episode_nr = z_number;
+                }
+
+                i = i + 1;
+            }
+        }
         else if (arg == "-o") {
             if (i + 1 > last_i) {
                 continue;
@@ -149,10 +168,11 @@ Options Helper::get_options(const std::vector<std::string> &args) {
             }
 
             auto const h_argument = args[i + 1];
+            
             if (h_argument.length() > 0 && h_argument[0] != '-') {
                 options.stop_when_file_found_string = h_argument;
                 i = i + 1;
-             }
+            }
         }
         else if (arg == "-n") {
             if (i + 1 > last_i) {
@@ -272,6 +292,14 @@ std::string Helper::get_extension(std::string input) {
 
     //fallback
     return "mp3";
+}
+
+std::string Helper::get_zero_padded_number_string(const size_t number, const size_t leading_zeros) {
+    std::string number_str = std::to_string(number);
+    std::string zero_str = std::string(leading_zeros - std::min(leading_zeros, number_str.length()), '0');
+    std::string padded_str = zero_str + number_str;
+
+    return padded_str;
 }
 
 #ifdef _WIN32

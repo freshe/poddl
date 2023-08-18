@@ -4,3 +4,5 @@
 *.entitlements
 *.txt
 .vscode/
+test.cpp
+test
