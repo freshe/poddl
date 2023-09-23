@@ -29,7 +29,7 @@ std::string const enclosure_pattern = "<enclosure.*?url=[\"|'](.+?)[\"|'].*?>";
 std::string const title_pattern = "<title>(.+?)</title>";
 std::string const cdata_pattern = "<\\!\\[CDATA\\[(.+?)\\]\\]>";
 
-std::string const start_tag = "<item>";
+std::string const start_tag = "<item";
 std::string const end_tag = "</item>";
 std::size_t const end_len = end_tag.length();
 
