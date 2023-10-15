@@ -58,6 +58,7 @@ CURLcode Client::curl_read(const std::string& url, std::ostream& output_stream) 
     
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, "poddl - podcast downloader");
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &Client::curl_write);
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
