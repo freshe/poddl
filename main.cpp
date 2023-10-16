@@ -29,7 +29,7 @@
  *  I need therapy now
  */
 
-#define VERSION "2023.10.15"
+#define VERSION "2023.10.16"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -57,6 +57,7 @@ void print_help() {
 
 void print_header() {
     std::cout << std::endl << "poddl " << VERSION << std::endl;
+    std::cout << curl_version() << std::endl << std::endl;
     std::cout << "https://www.fredrikblank.com/poddl/" << std::endl;
     std::cout << std::endl;
 }
