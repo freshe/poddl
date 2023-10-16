@@ -38,6 +38,7 @@
 #include <limits>
 
 #ifdef _WIN32
+//windows
 #define NOMINMAX
 #define CURL_STATICLIB
 #include <windows.h>
@@ -49,7 +50,6 @@
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Wldap32.lib")
 #pragma comment(lib, "Crypt32.lib")
-
 #ifdef WINARM64
 #include "../wincurl-arm64/curl.h"
 #pragma comment(lib, "../wincurl-arm64/libcurl_a.lib")
@@ -57,13 +57,17 @@
 #include "../wincurl-x64/curl.h"
 #pragma comment(lib, "../wincurl-x64/libcurl_a.lib")
 #endif
-
 #else
+//unix
 #include <unistd.h>
 #include <dirent.h>
 #include <string.h>
 #include <sys/stat.h>
+#ifdef CURL_STATICLIB
+#include "../libcurl/curl.h"
+#else
 #include <curl/curl.h>
+#endif
 #endif
 
 struct Podcast {
