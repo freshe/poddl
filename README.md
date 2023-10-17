@@ -38,7 +38,7 @@ Optional arguments:
   </tr>
   <tr>
     <td>
-      Linux x64 (Ubuntu 20.04)
+      Linux x64 (Ubuntu 20.04, 22.04)
     </td>
     <td>
       <a href="https://github.com/freshe/poddl/raw/master/bin/poddl-ubuntu-x64.zip">Download</a>
@@ -46,7 +46,7 @@ Optional arguments:
   </tr>
   <tr>
     <td>
-      Linux x64 (Debian 11)
+      Linux x64 (Debian 11, 12)
     </td>
     <td>
       <a href="https://github.com/freshe/poddl/raw/master/bin/poddl-debian-x64.zip">Download</a>
