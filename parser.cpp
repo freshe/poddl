@@ -33,7 +33,7 @@ std::string const start_tag = "<item";
 std::string const end_tag = "</item>";
 std::size_t const end_len = end_tag.length();
 
-std::vector<Podcast> Parser::get_items(std::string xml, bool reverse) {
+std::vector<Podcast> Parser::get_items(const std::string &xml, bool reverse) {
     fb::HtmlCoder html_coder;
     std::vector<Podcast> output;
 

@@ -130,7 +130,7 @@ int main(int argc, const char *argv[]) {
     }
 
     const auto xml = rss_stream.str();
-    const bool reverse = !options.newest_first;
+    const auto reverse = !options.newest_first;
     auto items = parser.get_items(xml, reverse);
 
     if (options.episode_from >= 0) {

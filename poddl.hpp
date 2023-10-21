@@ -93,7 +93,7 @@ struct Options {
 
 class Parser {
 public:
-    std::vector<Podcast> get_items(std::string xml, bool reverse);
+    std::vector<Podcast> get_items(const std::string &xml, bool reverse);
 };
 
 class Helper {
