@@ -36,6 +36,9 @@
 #include <cstdlib>
 #include <cctype>
 #include <limits>
+#include <chrono>
+#include <iomanip>
+#include <locale>
 
 #ifdef _WIN32
 //windows
@@ -75,6 +78,7 @@ struct Podcast {
     std::string url;
     std::string title;
     std::string ext;
+    std::size_t timestamp = 0;
 };
 
 struct Options {
@@ -106,6 +110,7 @@ public:
     static std::string url_encode_lazy(std::string input);
     static std::string get_extension(std::string input);
     static std::string get_zero_padded_number_string(const size_t number, const size_t leading_zeros);
+    static std::time_t rfc_time_to_timestamp(const std::string &input);
 #ifdef _WIN32
     static std::wstring utf8_to_wide_win_string(std::string input);
     static std::string wide_win_string_to_utf8(std::wstring input);

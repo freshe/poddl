@@ -27,6 +27,7 @@
 
 std::string const enclosure_pattern = "<enclosure.*?url=[\"|'](.+?)[\"|'].*?>";
 std::string const title_pattern = "<title>(.+?)</title>";
+std::string const pubdate_pattern = "<pubDate>(.+?)</pubDate>";
 std::string const cdata_pattern = "<\\!\\[CDATA\\[(.+?)\\]\\]>";
 
 std::string const start_tag = "<item";
@@ -40,6 +41,9 @@ std::vector<Podcast> Parser::get_items(const std::string &xml, bool reverse) {
     std::regex regex_enclosure(enclosure_pattern);
     std::regex regex_title(title_pattern);
     std::regex regex_cdata(cdata_pattern);
+    std::regex regex_pubdate(pubdate_pattern);
+
+    bool all_stamps_found = true;
 
     auto start_pos = xml.find(start_tag);
     auto end_pos = xml.find(end_tag);
@@ -48,10 +52,12 @@ std::vector<Podcast> Parser::get_items(const std::string &xml, bool reverse) {
         auto length = (end_pos - start_pos) + end_len;
         auto item = xml.substr(start_pos, length);
 
-        std::string url, title, ext;
+        std::string url, title, ext, pubdate;
+        std::size_t timestamp = 0;
         std::smatch match_enclosure;
         std::smatch match_title;
         std::smatch match_cdata;
+        std::smatch match_pubdate;
         
         //URL
         if (std::regex_search(item, match_enclosure, regex_enclosure)) {
@@ -61,6 +67,17 @@ std::vector<Podcast> Parser::get_items(const std::string &xml, bool reverse) {
         //Title
         if (std::regex_search(item, match_title, regex_title)) {
             title = match_title.str(1);
+        }
+
+        //PubDate
+        if (std::regex_search(item, match_pubdate, regex_pubdate)) {
+            pubdate = match_pubdate.str(1);
+            timestamp = Helper::rfc_time_to_timestamp(pubdate);
+            if (timestamp <= 0) {
+                all_stamps_found = false;
+            }
+        } else {
+            all_stamps_found = false;
         }
         
         if (!url.empty() && !title.empty()) {
@@ -73,12 +90,22 @@ std::vector<Podcast> Parser::get_items(const std::string &xml, bool reverse) {
             podcast.url = Helper::url_encode_lazy(html_coder.decode(url));
             podcast.title = Helper::clean_filename(html_coder.decode(title));
             podcast.ext = Helper::get_extension(url);
+            podcast.timestamp = timestamp;
             
             output.push_back(podcast);
         }
 
         start_pos = xml.find(start_tag, end_pos);
         end_pos = xml.find(end_tag, start_pos);
+    }
+
+    if (all_stamps_found) {
+        auto sort_rule = [] (Podcast const& p1, Podcast const& p2) -> bool
+        {
+            return p1.timestamp > p2.timestamp;
+        };
+        
+        std::sort(output.begin(), output.end(), sort_rule);
     }
 
     if (reverse) {

@@ -302,6 +302,21 @@ std::string Helper::get_zero_padded_number_string(const size_t number, const siz
     return padded_str;
 }
 
+time_t Helper::rfc_time_to_timestamp(const std::string &input) {
+    std::tm tm = {};
+    std::istringstream ss(input);
+    ss >> std::get_time(&tm, "%a, %d %b %Y %H:%M:%S");
+
+    if (ss.fail()) {
+        //error
+    } else {
+        std::time_t t = std::mktime(&tm);
+        return t;
+    }
+
+    return 0;
+}
+
 #ifdef _WIN32
 std::wstring Helper::utf8_to_wide_win_string(std::string input) {
     int wchars_num = MultiByteToWideChar(CP_UTF8, 0, input.c_str(), -1, NULL ,0);
