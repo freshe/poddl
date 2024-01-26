@@ -72,7 +72,12 @@ std::vector<Podcast> Parser::get_items(const std::string &xml, bool reverse) {
         //PubDate
         if (std::regex_search(item, match_pubdate, regex_pubdate)) {
             pubdate = match_pubdate.str(1);
-            timestamp = Helper::rfc_time_to_timestamp(pubdate);
+
+            try {
+                //A little bit afraid of this
+                timestamp = Helper::rfc_time_to_timestamp(pubdate);
+            } catch(...) { }
+
             if (timestamp <= 0) {
                 all_stamps_found = false;
             }
