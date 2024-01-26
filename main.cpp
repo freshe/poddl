@@ -29,7 +29,7 @@
  *  I need therapy now
  */
 
-#define VERSION "2023.10.16"
+#define VERSION "2024.01.26"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
