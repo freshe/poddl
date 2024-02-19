@@ -22,12 +22,13 @@ Optional arguments:
   <tr><th>OS</th><th></th></tr>
   <tr>
     <td>
-      Windows x64
+      Windows
     </td>
     <td>
       <a href="https://github.com/freshe/poddl/raw/master/bin/poddl-win-x64.zip">Download</a>
     </td>
   </tr>
+  <!--
   <tr>
     <td>
       Windows arm64
@@ -35,7 +36,7 @@ Optional arguments:
     <td>
       <a href="https://github.com/freshe/poddl/raw/master/bin/poddl-win-arm64.zip">Download</a>
     </td>
-  </tr>
+  </tr> -->
   <tr>
     <td>
       Linux x64 (Ubuntu 20.04, 22.04)
