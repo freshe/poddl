@@ -147,7 +147,12 @@ int main(int argc, const char *argv[]) {
         return -1;
     }
         
-    std::cout << (options.list_only ? "Listing " : "Downloading ") << size << " files" << std::endl << std::endl;
+    size_t files_to_download = size;
+    if (options.take > 0 && !options.list_only) {
+        files_to_download = options.take;
+    }
+
+    std::cout << (options.list_only ? "Listing " : "Downloading ") << files_to_download << " files" << std::endl << std::endl;
     size_t total_count = 1;
     size_t download_count = 0;
 
