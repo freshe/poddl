@@ -13,6 +13,7 @@ Optional arguments:
 -z N = Zero pad episode index / number when -i or -s are used (default = 3 if N are left out)  
 -n N = Download a single episode  
 -n N-N = Download a range of episodes  
+-t N = Download only N episodes  
 -h = Quit when first existing file is found  
 -h "search string" = Quit when first existing file matches the input string
 
