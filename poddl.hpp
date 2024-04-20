@@ -87,9 +87,12 @@ struct Options {
     bool newest_first = false;
     bool stop_when_file_found = false;
     bool append_episode_nr = false;
-    size_t zero_padded_episode_nr = 0;
+    
     int episode_from = -1;
     int episode_to = -1;
+    size_t take = -1;
+    size_t zero_padded_episode_nr = 0;
+    
     std::string stop_when_file_found_string {};
     std::string url {};
     std::string path {};

@@ -29,7 +29,7 @@
  *  I need therapy now
  */
 
-#define VERSION "2024.01.26"
+#define VERSION "2024.04.20"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -48,8 +48,9 @@ void print_help() {
     std::cout << "-i = Add episode index/number to file names" << std::endl;
     std::cout << "-s = Use episode index/number as file names (nnn.ext)" << std::endl;
     std::cout << "-z N = Zero pad index/number when -i or -s are used (default = 3 if N are left out)" << std::endl;
-    std::cout << "-n N = Download a single episode" << std::endl;
+    std::cout << "-n N = Download only episode N" << std::endl;
     std::cout << "-n N-N = Download a range of episodes" << std::endl;
+    std::cout << "-t N = Download only N episodes" << std::endl;
     std::cout << "-h = Quit when first existing file is found" << std::endl;
     std::cout << "-h \"search string\" = Quit when first existing file matches the input string" << std::endl;
     std::cout << std::endl;
@@ -147,13 +148,17 @@ int main(int argc, const char *argv[]) {
     }
         
     std::cout << (options.list_only ? "Listing " : "Downloading ") << size << " files" << std::endl << std::endl;
-    int count = 1;
+    size_t total_count = 1;
+    size_t download_count = 0;
 
     for (auto const& item : items) {
         if (options.list_only) {
             std::cout << "[" << item.number << "]" << " " << item.title << std::endl;
-            count++;
             continue;
+        }
+
+        if (options.take > 0 && download_count >= options.take) {
+            break;
         }
 
         auto title = item.title;
@@ -198,12 +203,14 @@ int main(int argc, const char *argv[]) {
         if (FileSystem::file_exists(file_path)) {
             std::cout << "Skipping file " << print_file_path << std::endl;
 
-            count++;
+            total_count++;
+            download_count++;
+            
             continue;
         }
 
         std::ofstream fs(temp_file_path, std::ostream::binary);
-        std::cout << "Downloading file " << count << "/" << size << " " << "[" << item.number << "]" << " " << item.title << std::endl;
+        std::cout << "Downloading file " << total_count << "/" << size << " " << "[" << item.number << "]" << " " << item.title << std::endl;
 
         if (client.write_file_stream(item.url, fs)) {
             fs.close();
@@ -216,7 +223,8 @@ int main(int argc, const char *argv[]) {
             std::cout << "Error downloading file " << item.title << std::endl;
         }
 
-        count++;
+        total_count++;
+        download_count++;
     }
 
     if (FileSystem::directory_is_empty(temp_path)) {

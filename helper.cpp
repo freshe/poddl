@@ -97,6 +97,7 @@ void Helper::debug_print_options(const Options &options)
     std::cout << "newest_first: " << options.newest_first << std::endl;
     std::cout << "episode_from: " << options.episode_from << std::endl;
     std::cout << "episode_to: " << options.episode_to << std::endl;
+    std::cout << "take: " << options.take << std::endl;
     std::cout << "stop_when_file_found -h: " << options.stop_when_file_found << std::endl;
     std::cout << "stop_when_file_found_string -h: " << options.stop_when_file_found_string << std::endl;
 }
@@ -172,6 +173,16 @@ Options Helper::get_options(const std::vector<std::string> &args) {
             if (h_argument.length() > 0 && h_argument[0] != '-') {
                 options.stop_when_file_found_string = h_argument;
                 i = i + 1;
+            }
+        }
+        else if (arg == "-t") {
+            if (i + 1 > last_i) {
+                continue;
+            }
+
+            int take = int_try_parse(args[i + 1]);
+            if (take > 0) {
+                options.take = take;
             }
         }
         else if (arg == "-n") {
