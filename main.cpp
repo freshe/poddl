@@ -215,7 +215,7 @@ int main(int argc, const char *argv[]) {
         }
 
         std::ofstream fs(temp_file_path, std::ostream::binary);
-        std::cout << "Downloading file " << total_count << "/" << size << " " << "[" << item.number << "]" << " " << item.title << std::endl;
+        std::cout << "Downloading file " << total_count << "/" << files_to_download << " " << "[" << item.number << "]" << " " << item.title << std::endl;
 
         if (client.write_file_stream(item.url, fs)) {
             fs.close();
