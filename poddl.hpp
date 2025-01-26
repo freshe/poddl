@@ -39,6 +39,7 @@
 #include <chrono>
 #include <iomanip>
 #include <locale>
+#include <ctime>
 
 #ifdef _WIN32
 //windows
@@ -79,6 +80,7 @@ struct Podcast {
     std::string title;
     std::string ext;
     std::size_t timestamp = 0;
+    std::string pubdate_str {};
 };
 
 struct Options {
@@ -87,6 +89,7 @@ struct Options {
     bool newest_first = false;
     bool stop_when_file_found = false;
     bool append_episode_nr = false;
+    bool append_publish_date = false;
     
     int episode_from = -1;
     int episode_to = -1;
@@ -114,6 +117,7 @@ public:
     static std::string get_extension(std::string input);
     static std::string get_zero_padded_number_string(const size_t number, const size_t leading_zeros);
     static std::time_t rfc_time_to_timestamp(const std::string &input);
+    static std::string time_to_iso_date_string(const std::time_t &time);
 #ifdef _WIN32
     static std::wstring utf8_to_wide_win_string(std::string input);
     static std::string wide_win_string_to_utf8(std::wstring input);

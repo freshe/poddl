@@ -92,6 +92,7 @@ void Helper::debug_print_options(const Options &options)
     std::cout << "path: " << options.path << std::endl;
     std::cout << "list_only: " << options.list_only << std::endl;
     std::cout << "append_episode_nr: " << options.append_episode_nr << std::endl;
+    std::cout << "append_publish_date: " << options.append_publish_date << std::endl;
     std::cout << "short_names: " << options.short_names << std::endl;
     std::cout << "zero_padded_episode_nr: " << options.zero_padded_episode_nr << std::endl;
     std::cout << "newest_first: " << options.newest_first << std::endl;
@@ -135,6 +136,9 @@ Options Helper::get_options(const std::vector<std::string> &args) {
         }
         else if (arg == "-i") {
             options.append_episode_nr = true;
+        }
+        else if (arg == "-p") {
+            options.append_publish_date = true;
         }
         else if (arg == "-z") {
             options.zero_padded_episode_nr = 3;
@@ -326,6 +330,14 @@ time_t Helper::rfc_time_to_timestamp(const std::string &input) {
     }
 
     return 0;
+}
+
+std::string Helper::time_to_iso_date_string(const std::time_t &time) {
+    std::tm *tm = std::localtime(&time);
+    char buffer[80];
+    std::strftime(buffer, 80, "%Y-%m-%d", tm);
+    
+    return std::string(buffer);
 }
 
 #ifdef _WIN32

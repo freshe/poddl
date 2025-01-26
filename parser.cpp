@@ -53,6 +53,7 @@ std::vector<Podcast> Parser::get_items(const std::string &xml, bool reverse) {
         auto item = xml.substr(start_pos, length);
 
         std::string url, title, ext, pubdate;
+        std::string pubdate_str {};
         std::size_t timestamp = 0;
         std::smatch match_enclosure;
         std::smatch match_title;
@@ -76,6 +77,7 @@ std::vector<Podcast> Parser::get_items(const std::string &xml, bool reverse) {
             try {
                 //A little bit afraid of this
                 timestamp = Helper::rfc_time_to_timestamp(pubdate);
+                pubdate_str = Helper::time_to_iso_date_string(timestamp);
             } catch(...) { }
 
             if (timestamp <= 0) {
@@ -96,7 +98,8 @@ std::vector<Podcast> Parser::get_items(const std::string &xml, bool reverse) {
             podcast.title = Helper::clean_filename(html_coder.decode(title));
             podcast.ext = Helper::get_extension(url);
             podcast.timestamp = timestamp;
-            
+            podcast.pubdate_str = pubdate_str;
+
             output.push_back(podcast);
         }
 

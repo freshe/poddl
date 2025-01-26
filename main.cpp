@@ -29,7 +29,7 @@
  *  I need therapy now
  */
 
-#define VERSION "2024.04.20"
+#define VERSION "2025.01.26"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -45,6 +45,7 @@ void print_help() {
     std::cout << "-o = Output path (needed if arguments are passed)" << std::endl;
     std::cout << "-l = Only display list of episodes" << std::endl;
     std::cout << "-r = Download/List newest episodes first" << std::endl;
+    std::cout << "-p = Append publish date to file names" << std::endl;
     std::cout << "-i = Add episode index/number to file names" << std::endl;
     std::cout << "-s = Use episode index/number as file names (nnn.ext)" << std::endl;
     std::cout << "-z N = Zero pad index/number when -i or -s are used (default = 3 if N are left out)" << std::endl;
@@ -176,6 +177,10 @@ int main(int argc, const char *argv[]) {
             title = index_str;
         } else if (options.append_episode_nr) {
             title = index_str + ". " + item.title;
+        }
+
+        if (options.append_publish_date && !item.pubdate_str.empty()) {
+            title = title + " " + item.pubdate_str;
         }
 
 #ifdef _WIN32
