@@ -57,6 +57,7 @@ g++ *.cpp -O2 -std=c++11 -lcurl -o poddl
 -o = Output path (needed if arguments are passed)  
 -l = Only display list of episodes  
 -r = Download/List newest episodes first  
+-p = Append publish date to file names (ISO)   
 -i = Add episode index / number to file names   
 -s = Use episode index / number as file names (nnn.ext)  
 -z N = Zero pad episode index / number when -i or -s are used (default = 3 if N are left out)  
