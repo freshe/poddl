@@ -99,6 +99,7 @@ void Helper::debug_print_options(const Options &options)
     std::cout << "episode_from: " << options.episode_from << std::endl;
     std::cout << "episode_to: " << options.episode_to << std::endl;
     std::cout << "take: " << options.take << std::endl;
+    std::cout << "truncate_names: " << options.truncate_names << std::endl;
     std::cout << "stop_when_file_found -h: " << options.stop_when_file_found << std::endl;
     std::cout << "stop_when_file_found_string -h: " << options.stop_when_file_found_string << std::endl;
 }
@@ -184,9 +185,18 @@ Options Helper::get_options(const std::vector<std::string> &args) {
                 continue;
             }
 
-            int take = int_try_parse(args[i + 1]);
+            auto const take = int_try_parse(args[i + 1]);
             if (take > 0) {
                 options.take = take;
+            }
+        }
+        else if (arg == "-T") {
+            if (i + 1 > last_i) {
+                continue;
+            }
+            auto const truncate = int_try_parse(args[i + 1]);
+            if (truncate > 0) {
+                options.truncate_names = truncate;
             }
         }
         else if (arg == "-n") {
@@ -338,6 +348,20 @@ std::string Helper::time_to_iso_date_string(const std::time_t &time) {
     std::strftime(buffer, 80, "%Y-%m-%d", tm);
     
     return std::string(buffer);
+}
+
+std::string ltrim(const std::string& s) {
+    size_t start = s.find_first_not_of(" \t\n\r\f\v");
+    return (start == std::string::npos) ? "" : s.substr(start);
+}
+
+std::string rtrim(const std::string& s) {
+    size_t end = s.find_last_not_of(" \t\n\r\f\v");
+    return (end == std::string::npos) ? "" : s.substr(0, end + 1);
+}
+
+std::string Helper::trim(const std::string& s) {
+    return rtrim(ltrim(s));
 }
 
 #ifdef _WIN32

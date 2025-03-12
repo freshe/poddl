@@ -29,7 +29,7 @@
  *  I need therapy now
  */
 
-#define VERSION "2025.01.26"
+#define VERSION "2025.03.12"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -54,6 +54,7 @@ void print_help() {
     std::cout << "-t N = Download only N episodes" << std::endl;
     std::cout << "-h = Quit when first existing file is found" << std::endl;
     std::cout << "-h \"search string\" = Quit when first existing file matches the input string" << std::endl;
+    std::cout << "-T N = Truncate file names by N characters" << std::endl;
     std::cout << std::endl;
 }
 
@@ -173,6 +174,12 @@ int main(int argc, const char *argv[]) {
             ? Helper::get_zero_padded_number_string(item.number, options.zero_padded_episode_nr)
             : std::to_string(item.number);
 
+        if (options.truncate_names > 0) {
+            if (title.length() > options.truncate_names) {
+                title = Helper::trim(title.substr(0, options.truncate_names));
+            }
+        }
+        
         if (options.short_names) {
             title = index_str;
         } else if (options.append_episode_nr) {
@@ -182,15 +189,26 @@ int main(int argc, const char *argv[]) {
         if (options.append_publish_date && !item.pubdate_str.empty()) {
             title = title + " " + item.pubdate_str;
         }
-
+        
 #ifdef _WIN32
-        std::wstring const file_path = path + L"/" + Helper::utf8_to_wide_win_string(title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
-        std::wstring const temp_file_path = temp_path + L"/" + Helper::utf8_to_wide_win_string(title) + L"." + Helper::utf8_to_wide_win_string(item.ext);
+        std::wstring file_title = Helper::utf8_to_wide_win_string(title);
+        std::wstring file_ext = Helper::utf8_to_wide_win_string(item.ext);
+        if (file_title.length() > 200) {
+            file_title = file_title.substr(0, 200);
+        }
+
+        std::wstring const file_path = path + L"/" + file_title + L"." + file_ext;
+        std::wstring const temp_file_path = temp_path + L"/" + file_title + L"." + file_ext;
         std::string const print_file_path = Helper::wide_win_string_to_utf8(file_path);
         std::string const print_temp_file_path = Helper::wide_win_string_to_utf8(temp_file_path);
 #else
-        std::string const file_path = path + "/" + title + "." + item.ext;
-        std::string const temp_file_path = temp_path + "/" + title + "." + item.ext;
+        std::string file_title = title;
+        if (file_title.length() > 200) {
+            file_title = title.substr(0, 200);
+        }
+
+        std::string const file_path = path + "/" + file_title + "." + item.ext;
+        std::string const temp_file_path = temp_path + "/" + file_title + "." + item.ext;
         std::string const print_file_path = file_path;
         std::string const print_temp_file_path = temp_file_path;
 #endif

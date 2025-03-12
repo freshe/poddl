@@ -95,6 +95,7 @@ struct Options {
     int episode_to = -1;
     size_t take = 0;
     size_t zero_padded_episode_nr = 0;
+    size_t truncate_names = 0;
     
     std::string stop_when_file_found_string {};
     std::string url {};
@@ -118,6 +119,7 @@ public:
     static std::string get_zero_padded_number_string(const size_t number, const size_t leading_zeros);
     static std::time_t rfc_time_to_timestamp(const std::string &input);
     static std::string time_to_iso_date_string(const std::time_t &time);
+    static std::string trim(const std::string& s);
 #ifdef _WIN32
     static std::wstring utf8_to_wide_win_string(std::string input);
     static std::string wide_win_string_to_utf8(std::wstring input);
