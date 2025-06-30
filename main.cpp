@@ -29,7 +29,7 @@
  *  I need therapy now
  */
 
-#define VERSION "2025.03.12"
+#define VERSION "2025.06.30"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -133,6 +133,11 @@ int main(int argc, const char *argv[]) {
     }
 
     const auto xml = rss_stream.str();
+
+    #if DEBUG
+    std::cout << "XML: " << xml << std::endl;
+    #endif
+
     const auto reverse = !options.newest_first;
     auto items = parser.get_items(xml, reverse);
 

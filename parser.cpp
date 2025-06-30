@@ -26,13 +26,26 @@
 #include "html_coder.hpp"
 
 std::string const enclosure_pattern = "<enclosure.*?url=[\"|'](.+?)[\"|'].*?>";
-std::string const title_pattern = "<title>(.+?)</title>";
+std::string const title_pattern = "<title>([\\s\\S]*?)</title>";
 std::string const pubdate_pattern = "<pubDate>(.+?)</pubDate>";
 std::string const cdata_pattern = "<\\!\\[CDATA\\[(.+?)\\]\\]>";
 
 std::string const start_tag = "<item";
 std::string const end_tag = "</item>";
 std::size_t const end_len = end_tag.length();
+
+inline void ltrim(std::string &s) {
+    s.erase(0, s.find_first_not_of(" \t\n\r\f\v"));
+}
+
+inline void rtrim(std::string &s) {
+    s.erase(s.find_last_not_of(" \t\n\r\f\v") + 1);
+}
+
+inline void trim(std::string &s) {
+    ltrim(s);
+    rtrim(s);
+}
 
 std::vector<Podcast> Parser::get_items(const std::string &xml, bool reverse) {
     fb::HtmlCoder html_coder;
@@ -70,6 +83,10 @@ std::vector<Podcast> Parser::get_items(const std::string &xml, bool reverse) {
             title = match_title.str(1);
         }
 
+        #if DEBUG
+        std::cout << url << " " << title << std::endl;
+        #endif
+
         //PubDate
         if (std::regex_search(item, match_pubdate, regex_pubdate)) {
             pubdate = match_pubdate.str(1);
@@ -88,6 +105,8 @@ std::vector<Podcast> Parser::get_items(const std::string &xml, bool reverse) {
         }
         
         if (!url.empty() && !title.empty()) {
+            trim(title);
+
             Podcast podcast;
 
             if (std::regex_search(title, match_cdata, regex_cdata)) {
