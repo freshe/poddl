@@ -54,6 +54,7 @@
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Wldap32.lib")
 #pragma comment(lib, "Crypt32.lib")
+#pragma comment(lib, "secur32.lib")
 #ifdef WINARM64
 #include "../wincurl-arm64/curl.h"
 #pragma comment(lib, "../wincurl-arm64/libcurl_a.lib")
