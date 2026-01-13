@@ -29,7 +29,7 @@
  *  I need therapy now
  */
 
-#define VERSION "2025.06.30"
+#define VERSION "2026.01.13"
 
 void print_help() {
     std::cout << "How to use:" << std::endl;
@@ -197,7 +197,7 @@ int main(int argc, const char *argv[]) {
         }
 
         if (options.replace_whitespace) {
-            Helper::replace_whitespace(title, options.whitespace_replace_char);
+            Helper::replace_whitespace(title, options.whitespace_replace_str);
         }
         
 #ifdef _WIN32
