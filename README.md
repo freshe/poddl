@@ -65,7 +65,7 @@ g++ *.cpp -O2 -std=c++11 -lcurl -o poddl
 -n N-N = Download a range of episodes  
 -t N = Download only N episodes  
 -h = Quit when first existing file is found  
--h "search string" = Quit when first existing file matches the input string
+-h "search string" = Quit when first existing file matches the input string  
 -w X = Replace whitespace characters in filenames with X  
 
 <h3>Examples</h3>
