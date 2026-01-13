@@ -54,6 +54,7 @@ void print_help() {
     std::cout << "-t N = Download only N episodes" << std::endl;
     std::cout << "-h = Quit when first existing file is found" << std::endl;
     std::cout << "-h \"search string\" = Quit when first existing file matches the input string" << std::endl;
+    std::cout << "-w X = Replace whitespace characters in filenames with X" << std::endl;
     std::cout << "-T N = Truncate file names by N characters" << std::endl;
     std::cout << std::endl;
 }
@@ -193,6 +194,10 @@ int main(int argc, const char *argv[]) {
 
         if (options.append_publish_date && !item.pubdate_str.empty()) {
             title = title + " " + item.pubdate_str;
+        }
+
+        if (options.replace_whitespace) {
+            Helper::replace_whitespace(title, options.whitespace_replace_char);
         }
         
 #ifdef _WIN32

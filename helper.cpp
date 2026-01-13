@@ -102,6 +102,8 @@ void Helper::debug_print_options(const Options &options)
     std::cout << "truncate_names: " << options.truncate_names << std::endl;
     std::cout << "stop_when_file_found -h: " << options.stop_when_file_found << std::endl;
     std::cout << "stop_when_file_found_string -h: " << options.stop_when_file_found_string << std::endl;
+    std::cout << "replace_whitespace: " << options.replace_whitespace << std::endl;
+    std::cout << "whitespace_replace_char: " << options.whitespace_replace_char << std::endl;
 }
 
 Options Helper::get_options(const std::vector<std::string> &args) {
@@ -197,6 +199,18 @@ Options Helper::get_options(const std::vector<std::string> &args) {
             auto const truncate = int_try_parse(args[i + 1]);
             if (truncate > 0) {
                 options.truncate_names = truncate;
+            }
+        }
+        else if (arg == "-w") {
+            if (i + 1 > last_i) {
+                continue;
+            }
+
+            auto const w_argument = args[i + 1];
+            if (w_argument.length() > 0) {
+                options.replace_whitespace = true;
+                options.whitespace_replace_char = w_argument[0];
+                i = i + 1;
             }
         }
         else if (arg == "-n") {
@@ -362,6 +376,15 @@ std::string rtrim(const std::string& s) {
 
 std::string Helper::trim(const std::string& s) {
     return rtrim(ltrim(s));
+}
+
+void Helper::replace_whitespace(std::string &input, char replacement) {
+    std::replace_if(
+        input.begin(),
+        input.end(),
+        [](unsigned char c) { return std::isspace(c); },
+        replacement
+    );
 }
 
 #ifdef _WIN32
